@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import courseManagementSystem.Dblogin.LoginResult;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -129,18 +131,13 @@ public class Signup extends JFrame {
 				
 				System.out.println(fullName+ " " + email + " "  +password +" " + userType);
 				
-				//
+				
 				
 				if(!fullName.equals("") && !email.equals("") && !password.equals("")) {
 					
-					// Regex for UserName
-					
+					// Regex for UserName					
 					String regexUName = "[a-zA-Z]+ [a-zA-Z0-9]+"; // if full name required 
 					
-//					"^[A-Za-z]+(?: [A-Za-z]+)?$";
-
-					
-//					String regexUName = "[a-zA-Z0-9]+";
 
 					Pattern uName = Pattern.compile(regexUName);
 					
@@ -166,12 +163,13 @@ public class Signup extends JFrame {
 					System.out.println(("\n" + isValidUserName + " " + isEmailValid + " " + isPassValid ));
 						
 					
-					// Check for validation   
+					// check if user exists
+					boolean isExists = DataBaseExtension.checkEmail(email, userType);	
+		
 					
-					if(isValidUserName &&  isPassValid && isEmailValid ) {	
-						
-						
-						
+					// Check for validation   		
+					if(isValidUserName &&  isPassValid && isEmailValid  && !isExists) {	
+
 						
 						String encPass = Encrypt.getEncryptedValue(password, 8);
 					
@@ -219,6 +217,11 @@ public class Signup extends JFrame {
 					}									    										
 					else {
 						
+						if(isExists) {
+							System.out.println("Email Already Exists ");
+							JOptionPane.showMessageDialog(null, "Email Already Exists");
+						}
+						
 						if(!isEmailValid) {
 							System.out.println("Wrong emale formate");
 							JOptionPane.showMessageDialog(null, "Wrong emale formate");
@@ -257,14 +260,12 @@ public class Signup extends JFrame {
 		login.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				
+								
 				Login l = new Login();
 				l.setVisible(true);
 				dispose();
 				System.out.println("thi is login test232");
-				
-				
+								
 			}
 		});
 		login.setFont(new Font("Tahoma", Font.PLAIN, 12));

@@ -22,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -117,6 +118,7 @@ public class Login extends JFrame {
 		mode.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JButton signbtn = new JButton();
+		
 		signbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -130,6 +132,11 @@ public class Login extends JFrame {
 				if(checkLogin.isSuccess()) {			
 					System.out.println("you are logedin as " + checkLogin.getUsername());
 					JOptionPane.showMessageDialog(null, "You are logedin as "+ checkLogin.getUsername());
+					
+					Dashboard dash = new Dashboard();
+					dash.setVisible(true);
+					dispose();
+					
 					
 				}else {
 					System.out.println("username or password not mathched");
