@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Desktop;
+import java.net.URI;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,8 +46,12 @@ public class Dashboard extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
-	private JTable coursetable;
+	private static JTable coursetable;
 	private JTextField courseSearchf;
+	private JTextField searchStudentf;
+	private static JTable stdtable;
+	private JTextField txtSearchTutor;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -66,6 +72,99 @@ public class Dashboard extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	
+	
+	public static void getCourse() {
+		
+		
+		// inserting course data in table		
+		DefaultTableModel tmodel = (DefaultTableModel)coursetable.getModel();
+		
+		// clear row for avoiding duplicate data entry
+		 tmodel.setRowCount(0);
+		
+	       String url = "jdbc:mysql://localhost"; 
+	       String username = "root";
+	       String password = "";
+	       
+	       try {
+	           Connection con = DriverManager.getConnection(url, username, password);			           
+	           Statement stmt = con.createStatement();
+
+	           String query = "select * from sms.course";
+	           ResultSet rs = stmt.executeQuery(query);			    	   
+	    	  			    	   
+	           while(rs.next()) {
+	        	   
+	        	   String did = rs.getString(1);
+	        	   String dcourse = rs.getString(2);
+	        	   String dseats = rs.getString(3);
+	        	   String dbatch = rs.getString(4);
+	        	   String dyear = rs.getString(5);
+
+	        	   String data[]= {did, dcourse,  dseats, dbatch, dyear};
+	        	   tmodel.addRow(data);	        	   
+	           }
+	       }
+			
+			catch (SQLException e1) {
+	     	
+	           e1.printStackTrace();
+
+	       }
+	
+		
+	}
+	
+	
+	public static void getStudent() {
+		
+		
+		// inserting course data in table		
+		DefaultTableModel tmodel = (DefaultTableModel)stdtable.getModel();
+		
+		// clear row for avoiding duplicate data entry
+		 tmodel.setRowCount(0);
+		
+	       String url = "jdbc:mysql://localhost"; 
+	       String username = "root";
+	       String password = "";
+	       	       
+	       
+	       try {
+	           Connection con = DriverManager.getConnection(url, username, password);			           
+	           Statement stmt = con.createStatement();
+
+	           String query = "select * from sms.students_data";
+	           ResultSet rs = stmt.executeQuery(query);			    	   
+	    	  			    	   
+	           while(rs.next()) {
+	        	   
+	        	   String did = rs.getString(1);
+	        	   String dname = rs.getString(2);
+	        	   String demail = rs.getString(3);
+	        	   String dphone = rs.getString(4);
+	        	   String dcourse = rs.getString(5);
+
+	        	   String data[]= {did, dname,  demail, dphone, dcourse};
+	        	   tmodel.addRow(data);	        	   
+	           }
+	       }
+			
+			catch (SQLException e1) {
+	     	
+	           e1.printStackTrace();
+
+	       }	
+		
+	}
+	
+	
+	
+	
+	
+	
 	public Dashboard() {
 		setTitle("Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,6 +246,13 @@ public class Dashboard extends JFrame {
 		
 		mailbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					 Desktop.getDesktop().browse(new URI("https://mail.google.com/mail/u/0/#inbox?compose=new"));
+				}
+				catch(Exception e1) {
+					System.out.println(e1);
+				}
 			}
 		});
 		mailbtn.setBounds(37, 407, 171, 35);
@@ -167,51 +273,55 @@ public class Dashboard extends JFrame {
 		coursebtn.setBackground(new Color(240, 240, 240));
 		coursebtn.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
         
-        // Adding course
+        // All course data
 		coursebtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				tabbedPane.setSelectedIndex(1);
 				
-				// inserting course data in table
+				getCourse();
 				
-				DefaultTableModel tmodel = (DefaultTableModel)coursetable.getModel();
 				
-				// clear row for avoiding duplicate data entry
-				 tmodel.setRowCount(0);
 				
-			       String url = "jdbc:mysql://localhost"; 
-			       String username = "root";
-			       String password = "";
-
-			       
-			       try {
-			           Connection con = DriverManager.getConnection(url, username, password);			           
-			           Statement stmt = con.createStatement();
-
-			           String query = "select * from sms.course";
-			           ResultSet rs = stmt.executeQuery(query);			    	   
-			    	  			    	   
-			           while(rs.next()) {
-			        	   
-			        	   String did = rs.getString(1);
-			        	   String dcourse = rs.getString(2);
-			        	   String dseats = rs.getString(3);
-			        	   String dbatch = rs.getString(4);
-			        	   String dyear = rs.getString(5);
-
-			        	   String data[]= {did, dcourse,  dseats, dbatch, dyear};
-			        	   tmodel.addRow(data);
-			        	   
-			           }
-
-			       }
-					
-					catch (SQLException e1) {
-			     	
-			           e1.printStackTrace();
-
-			       }
+//				// inserting course data in table
+//				
+//				DefaultTableModel tmodel = (DefaultTableModel)coursetable.getModel();
+//				
+//				// clear row for avoiding duplicate data entry
+//				 tmodel.setRowCount(0);
+//				
+//			       String url = "jdbc:mysql://localhost"; 
+//			       String username = "root";
+//			       String password = "";
+//
+//			       
+//			       try {
+//			           Connection con = DriverManager.getConnection(url, username, password);			           
+//			           Statement stmt = con.createStatement();
+//
+//			           String query = "select * from sms.course";
+//			           ResultSet rs = stmt.executeQuery(query);			    	   
+//			    	  			    	   
+//			           while(rs.next()) {
+//			        	   
+//			        	   String did = rs.getString(1);
+//			        	   String dcourse = rs.getString(2);
+//			        	   String dseats = rs.getString(3);
+//			        	   String dbatch = rs.getString(4);
+//			        	   String dyear = rs.getString(5);
+//
+//			        	   String data[]= {did, dcourse,  dseats, dbatch, dyear};
+//			        	   tmodel.addRow(data);
+//			        	   
+//			           }
+//
+//			       }
+//					
+//					catch (SQLException e1) {
+//			     	
+//			           e1.printStackTrace();
+//
+//			       }
 				
 				
 				
@@ -238,6 +348,14 @@ public class Dashboard extends JFrame {
 		left.add(tutorbtn);
 		
 		JButton studbtn = new JButton("  Students");
+		studbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				tabbedPane.setSelectedIndex(3);
+				
+				getStudent();
+			}
+		});
 		studbtn.setIcon(new ImageIcon("D:\\java IDE\\Project\\src\\logo\\students.png"));
 		
 	
@@ -301,66 +419,74 @@ public class Dashboard extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Course Name", "Seats", "Batch", "No. of Years"
+				"Course ID", "Course Name", "Seats", "Batch", "No. of Years"
 			}
 		));
 		
-		
-		
+				
 		courseSearchf = new JTextField();
+		courseSearchf.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				 courseSearchf.setText("");
+				
+			}
+		});
+		courseSearchf.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		courseSearchf.setText("Search Course");
+		courseSearchf.setToolTipText("");
 		courseSearchf.addKeyListener(new KeyAdapter() {
 					
 			
 			  @Override
 			    public void keyPressed(KeyEvent e) {
+				  
+				  // Check for Enter key is pressed
 			        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			            // Enter key is pressed
+			          
 			            String enteredText = courseSearchf.getText();
 			            System.out.println("Text entered: " + enteredText);
 			            
 			            
-			         // search course by ID
-			    
+			            // search course by ID			    
 			                String url = "jdbc:mysql://localhost";
 			                String username = "root";
 			                String password = "";
+				
+							DefaultTableModel tmodel = (DefaultTableModel)coursetable.getModel();
+							
+							// clear row for avoiding duplicate data entry
+							 tmodel.setRowCount(0);
 
 			                try {
 			                    Connection con = DriverManager.getConnection(url, username, password);
-
 			                    Statement stmt = con.createStatement();
+			                    
+			                    String query = "SELECT * FROM sms.course WHERE coursename = '" + enteredText + "'";
 
-			                    String query = "SELECT * FROM sms.course WHERE id = 23";
 			                    ResultSet rs = stmt.executeQuery(query);
 
 			         
 			                    if (rs.next()) {
-			                        // Retrieve course information
-			                        String courseId = rs.getString("id");
-			                        String courseName = rs.getString("name");
-			                        int courseCredits = rs.getInt("credits");
+						        	   String did = rs.getString(1);
+						        	   String dcourse = rs.getString(2);
+						        	   String dseats = rs.getString(3);
+						        	   String dbatch = rs.getString(4);
+						        	   String dyear = rs.getString(5);
 
-			                       
+						        	   String data[]= {did, dcourse,  dseats, dbatch, dyear};
+						        	   tmodel.addRow(data);
+						        	   			                       
 			                    }
-
 			                    rs.close();
 			                    stmt.close();
-			                    con.close();
+			                    con.close();			                    
 
-			                    return course;
-
-			                } catch (SQLException e) {
-			                    e.printStackTrace();
+			                } catch (SQLException e1111) {
+			                    e1111.printStackTrace();
 			                   
-			                }
-			            
-
-			            
-			            //
-			            
-			            
-			            
-			            
+			                }			            
 			        }
 			    }
 
@@ -385,74 +511,285 @@ public class Dashboard extends JFrame {
 		addcourse.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
 		addcourse.setBackground(new Color(240, 240, 240));
 		
-		addcourse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-									
-				AddCourse ad = new AddCourse();
-				ad.setVisible(true);
+			
+				
+				addcourse.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+											
+						AddCourse ad = new AddCourse();
+						ad.setVisible(true);
+								
 						
+					}
+				});
+				addcourse.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+				addcourse.setBounds(260, 140, 118, 30);
+				coursepanel.add(addcourse);
 				
-			}
-		});
-		addcourse.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
-		addcourse.setBounds(260, 140, 118, 30);
-		coursepanel.add(addcourse);
-		
-		JButton editcourse = new JButton("Edit Course");
-		editcourse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+				JButton editcourse = new JButton("Edit Course");
+				editcourse.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						EditCourse  obj = new EditCourse();							
+						obj.setVisible(true);
+																					
+					}
+				});
+				editcourse.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+				editcourse.setBounds(387, 140, 118, 30);
+				coursepanel.add(editcourse);
 				
-				EditCourse  obj = new EditCourse();							
-				obj.setVisible(true);
-												
+				editcourse.setBackground(new Color(240, 240, 240));
+				
+				editcourse.setForeground(UIManager.getColor("Button.disabledShadow"));
+				
+					JButton deletecourse = new JButton("Delete Course");
+					deletecourse.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
 							
-			}
-		});
-		editcourse.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
-		editcourse.setBounds(387, 140, 118, 30);
-		coursepanel.add(editcourse);
-		
-		editcourse.setBackground(new Color(240, 240, 240));
-		
-		editcourse.setForeground(UIManager.getColor("Button.disabledShadow"));
-	
-		
-		
-		
-		JButton deletecourse = new JButton("Delete Course");
-		deletecourse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				DeleteCourse del = new DeleteCourse();
-				del.setVisible(true);
+							DeleteCourse del = new DeleteCourse();
+							del.setVisible(true);
+								
+							
+						}
+					});
+					deletecourse.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+					deletecourse.setBounds(514, 140, 118, 30);
 					
-				
-			}
-		});
-		deletecourse.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
-		deletecourse.setBounds(514, 140, 118, 30);
-		
-		deletecourse.setBackground(new Color(240, 240, 240));
-		
-		deletecourse.setForeground(UIManager.getColor("Button.disabledShadow"));
-		
-		
-		
-		coursepanel.add(deletecourse);
+					deletecourse.setBackground(new Color(240, 240, 240));
+					
+					deletecourse.setForeground(UIManager.getColor("Button.disabledShadow"));
+					
+					
+					
+					coursepanel.add(deletecourse);
 		
 		JPanel tutorspanel = new JPanel();
 		tabbedPane.addTab("New tab", null, tutorspanel, null);
 		tutorspanel.setLayout(null);
 		
-		JButton btnNewButton_7 = new JButton("tutors");
-		btnNewButton_7.setBounds(173, 253, 85, 21);
-		tutorspanel.add(btnNewButton_7);
+		JLabel lblNewLabel_2_1_1 = new JLabel("Tutors");
+		lblNewLabel_2_1_1.setBounds(55, 89, 180, 43);
+		lblNewLabel_2_1_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
+		tutorspanel.add(lblNewLabel_2_1_1);
+		
+		JSeparator separator_1_1 = new JSeparator();
+		separator_1_1.setBounds(55, 131, 574, 2);
+		tutorspanel.add(separator_1_1);
+		
+		JScrollPane scrollPane_1_1 = new JScrollPane();
+		scrollPane_1_1.setBounds(52, 197, 581, 408);
+		tutorspanel.add(scrollPane_1_1);
+		
+		table = new JTable();
+		scrollPane_1_1.setViewportView(table);
+		
+		txtSearchTutor = new JTextField();
+		txtSearchTutor.setBounds(51, 146, 194, 31);
+		txtSearchTutor.setToolTipText("");
+		txtSearchTutor.setText("Search Tutor");
+		txtSearchTutor.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtSearchTutor.setColumns(10);
+		tutorspanel.add(txtSearchTutor);
+		
+		JButton btnAddTutors = new JButton("Add Tutors");
+		btnAddTutors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnAddTutors.setBounds(256, 146, 118, 30);
+		btnAddTutors.setForeground(UIManager.getColor("Button.disabledShadow"));
+		btnAddTutors.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+		btnAddTutors.setBackground(new Color(240, 240, 240));
+		
+
+		
+		tutorspanel.add(btnAddTutors);
+		
+		JButton btnEditTutors = new JButton("Edit  Tutors");
+		btnEditTutors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnEditTutors.setBounds(383, 146, 118, 30);
+		btnEditTutors.setForeground(UIManager.getColor("Button.disabledShadow"));
+		btnEditTutors.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+		btnEditTutors.setBackground(new Color(240, 240, 240));
+		
+
+		
+		
+		
+		tutorspanel.add(btnEditTutors);
+		
+		JButton btnDeleteTutors = new JButton("Delete  Tutors");
+		btnDeleteTutors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnDeleteTutors.setBounds(510, 146, 121, 30);
+		btnDeleteTutors.setForeground(UIManager.getColor("Button.disabledShadow"));
+		btnDeleteTutors.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+		btnDeleteTutors.setBackground(new Color(240, 240, 240));
+		tutorspanel.add(btnDeleteTutors);
 		
 		JPanel studentspanel = new JPanel();
 		tabbedPane.addTab("New tab", null, studentspanel, null);
+		studentspanel.setLayout(null);
 		
-		JPanel mailpanel = new JPanel();
-		tabbedPane.addTab("New tab", null, mailpanel, null);
+		JLabel lblNewLabel_2_1 = new JLabel("Enroled Students");
+		lblNewLabel_2_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
+		lblNewLabel_2_1.setBounds(51, 83, 180, 43);
+		studentspanel.add(lblNewLabel_2_1);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setBounds(51, 125, 574, 2);
+		studentspanel.add(separator_1);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(48, 191, 577, 408);
+		studentspanel.add(scrollPane_1);
+		
+		stdtable = new JTable();
+		stdtable.setFont(new Font("Tahoma", Font.BOLD, 10));
+		stdtable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Student ID", "Full Name", "Email", "Phone No.", "Enlored Course"
+			}
+		));
+		stdtable.getColumnModel().getColumn(0).setPreferredWidth(65);
+		stdtable.getColumnModel().getColumn(1).setPreferredWidth(122);
+		stdtable.getColumnModel().getColumn(2).setPreferredWidth(165);
+		stdtable.getColumnModel().getColumn(3).setPreferredWidth(91);
+		stdtable.getColumnModel().getColumn(4).setPreferredWidth(163);
+		scrollPane_1.setViewportView(stdtable);
+		
+		searchStudentf = new JTextField();
+		searchStudentf.addKeyListener(new KeyAdapter() {
+		
+			
+			  @Override
+			    public void keyPressed(KeyEvent e) {
+				  
+				  // Check for Enter key is pressed
+			        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			          
+			            String enteredText = searchStudentf.getText();
+			            System.out.println("Text entered: " + enteredText);
+			            
+			            
+			            // search course by ID			    
+			                String url = "jdbc:mysql://localhost";
+			                String username = "root";
+			                String password = "";
+				
+							DefaultTableModel tmodel = (DefaultTableModel)stdtable.getModel();
+							
+							// clear row for avoiding duplicate data entry
+							 tmodel.setRowCount(0);
+
+			                try {
+			                    Connection con = DriverManager.getConnection(url, username, password);
+			                    Statement stmt = con.createStatement();
+			                    
+			                    String query = "SELECT * FROM sms.students_data WHERE name = '" + enteredText + "'";
+
+			                    ResultSet rs = stmt.executeQuery(query);
+
+			                    
+			                    if (rs.next()) {
+			    	        	   
+			    	        	   String did = rs.getString(1);
+			    	        	   String dname = rs.getString(2);
+			    	        	   String demail = rs.getString(3);
+			    	        	   String dphone = rs.getString(4);
+			    	        	   String dcourse = rs.getString(5);
+
+			    	        	   String data[]= {did, dname,  demail, dphone, dcourse};
+			    	        	   tmodel.addRow(data);	        	   
+			    	           }
+			                    
+			                    
+			                    rs.close();
+			                    stmt.close();
+			                    con.close();			                    
+
+			                } catch (SQLException e1111) {
+			                    e1111.printStackTrace();
+			                   
+			                }			            
+			        }
+			    }
+			
+			
+			
+		});
+		searchStudentf.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				searchStudentf.setText("");
+			}
+		});
+		searchStudentf.setToolTipText("");
+		searchStudentf.setText("Search Student");
+		searchStudentf.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		searchStudentf.setColumns(10);
+		searchStudentf.setBounds(47, 140, 194, 31);
+		studentspanel.add(searchStudentf);
+		
+		JButton addStudents = new JButton("Add Student");
+		addStudents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				AddStudents ads = new AddStudents();
+				ads.setVisible(true);
+			}
+		});
+		addStudents.setForeground(UIManager.getColor("Button.disabledShadow"));
+		addStudents.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+		addStudents.setBackground(new Color(240, 240, 240));
+		addStudents.setBounds(252, 140, 118, 30);
+		studentspanel.add(addStudents);
+			
+		
+		
+		JButton editStudents = new JButton("Edit Student");
+		editStudents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				EditStudent es = new EditStudent();
+				es.setVisible(true);
+				
+			}
+		});
+		editStudents.setForeground(UIManager.getColor("Button.disabledShadow"));
+		editStudents.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+		editStudents.setBackground(new Color(240, 240, 240));
+		
+		editStudents.setBounds(379, 140, 118, 30);
+				
+		
+		studentspanel.add(editStudents);
+		
+		JButton deleteStudents = new JButton("Delete Student");
+		deleteStudents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				DeleteStudent del = new DeleteStudent();
+				del.setVisible(true);
+			}
+		});
+		deleteStudents.setForeground(UIManager.getColor("Button.disabledShadow"));
+		deleteStudents.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 12));
+		deleteStudents.setBackground(new Color(240, 240, 240));
+		deleteStudents.setBounds(506, 140, 124, 30);
+		
+				
+		
+		studentspanel.add(deleteStudents);
 		
 		JPanel settingpanel = new JPanel();
 		tabbedPane.addTab("New tab", null, settingpanel, null);

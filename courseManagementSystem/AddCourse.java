@@ -57,7 +57,7 @@ public class AddCourse extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(-20, -14, 634, 511);
+		panel.setBounds(-20, -14, 427, 511);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -121,25 +121,23 @@ public class AddCourse extends JFrame {
 				
 				System.out.printf("%s %s %s %s",course, seat, batch, year);
 				
-				if(course.equals("") && seat.equals("") && batch.equals("") && year.equals("")) {
+				if(course.equals("") || seat.equals("") ||  batch.equals("") || year.equals("")) {
 									
 					JOptionPane.showMessageDialog(null, "All Fields required");
 				}
 				
 				else {			
 					
-//					 inserting data to sms.course
+					// inserting data to sms.course
 					boolean res = DataBaseExtension.addCourse(course, seat, batch, year);
 					
 					if(res) {
+						Dashboard.getCourse();
 						dispose();
 					}
 					
 				}
-				
-			
-				
-				
+	
 				
 			}
 		});

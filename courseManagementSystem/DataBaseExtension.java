@@ -176,14 +176,10 @@ public class DataBaseExtension {
 		            
 		            Statement stmt = con.createStatement();
 
-
 		            
 		            String data = "DELETE FROM sms.course WHERE id = '" + id + "'";
-
 		           int res =  stmt.executeUpdate(data);
-		            
 
-	   
 		            System.out.println("\nsuccessfully"); 
 		            		           
 		            stmt.close();
@@ -206,4 +202,187 @@ public class DataBaseExtension {
 		 }
 
 
+
+		 
+		 
+		// Add Students on sms.students_data
+		 public static boolean addStudents(String fullName, String email, String phoneNo, String course) {
+
+		     String url = "jdbc:mysql://localhost";
+		     String username = "root";
+		     String password = "";
+
+		     try {
+		         Connection con = DriverManager.getConnection(url, username, password);
+
+		         Statement stmt = con.createStatement();
+
+		         String createDatabaseQuery = "CREATE DATABASE IF NOT EXISTS sms";
+		         stmt.executeUpdate(createDatabaseQuery);
+
+		         String useDatabaseQuery = "USE sms";
+		         stmt.executeUpdate(useDatabaseQuery);
+
+		         String createTableQuery = "CREATE TABLE IF NOT EXISTS sms.students_data "
+		                 + "(id INT AUTO_INCREMENT PRIMARY KEY, "
+		                 + "name VARCHAR(100), "
+		                 + "email VARCHAR(100), "
+		                 + "phoneNo VARCHAR(20), "
+		                 + "course VARCHAR(100))";
+
+		         stmt.executeUpdate(createTableQuery);
+
+		         String insertDataQuery = "INSERT INTO sms.students_data (name, email, phoneNo, course) VALUES"
+		         		+ "('"+ fullName + "','" + email + "','" + phoneNo + "','" + course + "')";
+
+		         stmt.executeUpdate(insertDataQuery);
+
+		         System.out.println("\nSuccessfully added student");
+
+		         stmt.close();
+		         con.close();
+		         return true;
+
+		     } catch (SQLException e) {
+
+		         e.printStackTrace();
+		         return false;
+		     }
+		 }
+
+		
+		// Delete Students from sms.students_data
+		 public static boolean deleteStudent(String id) {
+			 
+		        String url = "jdbc:mysql://localhost"; 
+		        String username = "root";
+		        String password = "";
+  		        
+		        try {
+		            Connection con = DriverManager.getConnection(url, username, password);
+		            
+		            Statement stmt = con.createStatement();
+
+		            
+		            String data = "DELETE FROM sms.students_data WHERE id = '" + id + "'";
+		           int res =  stmt.executeUpdate(data);
+
+		            System.out.println("\nsuccessfully"); 
+		            		           
+		            stmt.close();
+		            con.close();
+		            
+		            if(res == 1) {
+		            	return true;
+		            }
+		            else {
+		            	return false;
+		            }
+		         
+		            
+		        } catch (SQLException e) {
+		        	
+		            e.printStackTrace();
+		            return false;
+		        }
+
+		 }
+		
+		 
+		 
+		 // Update Students details	of sms.students_data	 
+		 public static int editStudent( String StudentId,String StudentName,   String email, String phone, String course) {
+			 
+		
+		        String url = "jdbc:mysql://localhost"; 
+		        String username = "root";
+		        String password = "";
+     		        
+		        try {
+		            Connection con = DriverManager.getConnection(url, username, password);
+		            
+		            Statement stmt = con.createStatement();
+
+		            
+		            String updateQuery = "UPDATE sms.students_data SET "
+		                    + "name = '" + StudentName + "', "
+		                    + "email = '" + email + "', "
+		                    + "phoneNo = '" + phone + "', "
+		                    + "course = '" + course + "' "
+		                    + "WHERE id = " + StudentId;
+
+
+		            int res = stmt.executeUpdate(updateQuery);
+		            		            
+	   
+		            System.out.println("\nsuccessfully"); 
+		            		           
+		            stmt.close();
+		            con.close();
+		            
+		            
+		            return res;
+		            
+		        } catch (SQLException e) {
+		        	
+		            e.printStackTrace();
+		            return 0;
+		        }
+			 
+		 }
+		 
+		 
+		 // check for course
+		 
+		 // Check email exist or not in database
+		 public static boolean checkCourse(String course) {
+		       String url = "jdbc:mysql://localhost"; 
+		       String username = "root";
+		       String password = "";
+			
+		          boolean check = false;   
+		      
+		       try {
+		           Connection con = DriverManager.getConnection(url, username, password);	           
+		           Statement stmt = con.createStatement();	           
+		           String query = "select * from sms.course" ;
+		           ResultSet rs = stmt.executeQuery(query);
+  	   
+		           while(rs.next()) {
+
+		        	   String dcourse = rs.getString(2);
+
+
+		        	   if(dcourse.equals(course) ) { 	   
+		            	  
+	            	   check = true;
+	                   break;  
+		  
+		        	   }
+		           }
+
+		           if (check) {
+		        	   System.out.println("course exists");
+		        	   return true;
+		        	  
+		           } else {
+		               
+		        	   System.out.println("course NOt exists");
+		           return false;
+		              
+		           }
+		       }
+				
+				catch (SQLException e) {
+
+					 System.out.println("course NOt exists");
+		           e.printStackTrace();
+		           return false;
+		       }
+
+		       
+			 }
+		 
+		 
+		 
 }
