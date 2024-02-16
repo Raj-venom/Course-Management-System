@@ -15,9 +15,11 @@ public class DataBaseExtension {
 	
 	
 	public static void main(String[] args) {
+		
+		
+		
 	}
-	
-	
+		
 	
 		// Creating course 
 		 public static boolean addCourse( String courseName, String seats, String batch, String year) {
@@ -332,9 +334,7 @@ public class DataBaseExtension {
 		 }
 		 
 		 
-		 // check for course
-		 
-		 // Check email exist or not in database
+		 // check for course in course table
 		 public static boolean checkCourse(String course) {
 		       String url = "jdbc:mysql://localhost"; 
 		       String username = "root";
@@ -384,5 +384,164 @@ public class DataBaseExtension {
 			 }
 		 
 		 
+		// Add tutor on sms.tutor_data
+		 public static boolean addTutor(String fullName, String email, String phoneNo, String faculty) {
+
+		     String url = "jdbc:mysql://localhost";
+		     String username = "root";
+		     String password = "";
+
+		     try {
+		         Connection con = DriverManager.getConnection(url, username, password);
+
+		         Statement stmt = con.createStatement();
+
+		         String createDatabaseQuery = "CREATE DATABASE IF NOT EXISTS sms";
+		         stmt.executeUpdate(createDatabaseQuery);
+
+//		         String useDatabaseQuery = "USE sms";
+//		         stmt.executeUpdate(useDatabaseQuery);
+
+		         String createTableQuery = "CREATE TABLE IF NOT EXISTS sms.tutor_data "
+		                 + "(id INT AUTO_INCREMENT PRIMARY KEY, "
+		                 + "name VARCHAR(100), "
+		                 + "email VARCHAR(100), "
+		                 + "phoneNo VARCHAR(20), "
+		                 + "faculty VARCHAR(100))";
+
+		         stmt.executeUpdate(createTableQuery);
+
+		         String insertDataQuery = "INSERT INTO sms.tutor_data (name, email, phoneNo, faculty) VALUES"
+		         		+ "('"+ fullName + "','" + email + "','" + phoneNo + "','" + faculty + "')";
+
+		         stmt.executeUpdate(insertDataQuery);
+
+		         System.out.println("\nSuccessfully added tutor");
+
+		         stmt.close();
+		         con.close();
+		         return true;
+
+		     } catch (SQLException e) {
+
+		         e.printStackTrace();
+		         return false;
+		     }
+		 }
+		 
+		 // Update tutor details on Tutor_data table
+		 public static int editTutor( String tutorId,String tutorName,   String email, String phone, String faculty) {
+			 
+		
+		        String url = "jdbc:mysql://localhost"; 
+		        String username = "root";
+		        String password = "";
+     		        
+		        try {
+		            Connection con = DriverManager.getConnection(url, username, password);
+		            
+		            Statement stmt = con.createStatement();
+
+		            
+		            String updateQuery = "UPDATE sms.tutor_data SET "
+		                    + "name = '" + tutorName + "', "
+		                    + "email = '" + email + "', "
+		                    + "phoneNo = '" + phone + "', "
+		                    + "faculty = '" + faculty + "' "
+		                    + "WHERE id = " + tutorId;
+
+
+		            int res = stmt.executeUpdate(updateQuery);
+		            		            
+	   
+		            System.out.println("\nsuccessfully"); 
+		            		           
+		            stmt.close();
+		            con.close();
+		            
+		            
+		            return res;
+		            
+		        } catch (SQLException e) {
+		        	
+		            e.printStackTrace();
+		            return 0;
+		        }
+			 
+		 }
+		 
+		 // Delete tutor details form sms.tutor_data
+		 public static boolean deleteTutor(String id) {
+			 
+		        String url = "jdbc:mysql://localhost"; 
+		        String username = "root";
+		        String password = "";
+		        
+		        try {
+		            Connection con = DriverManager.getConnection(url, username, password);
+		            
+		            Statement stmt = con.createStatement();
+
+		            
+		            String data = "DELETE FROM sms.tutor_data WHERE id = '" + id + "'";
+		           int res =  stmt.executeUpdate(data);
+
+		            System.out.println("\nsuccessfully"); 
+		            		           
+		            stmt.close();
+		            con.close();
+		            
+		            if(res == 1) {
+		            	return true;
+		            }
+		            else {
+		            	return false;
+		            }
+		         
+		            
+		        } catch (SQLException e) {
+		        	
+		            e.printStackTrace();
+		            return false;
+		        }
+
+		 }
+		 
+		 
+		 // find total number of columns in tables
+		 public static String findTotalColumns(String tableName) {
+
+			    String url = "jdbc:mysql://localhost";
+			    String username = "root";
+			    String password = "";
+
+			    int rowCount = 0;
+			    try {
+			        Connection con = DriverManager.getConnection(url, username, password);
+
+			        Statement stmt = con.createStatement();
+
+			        String data = "SELECT * FROM sms." + tableName;
+			        ResultSet rs = stmt.executeQuery(data);
+
+			        while (rs.next()) {
+			            rowCount++;
+			        }
+
+			        System.out.println("\ntotal rows: " + rowCount);
+
+			        stmt.close();
+			        con.close();
+
+			     // String convert 
+			        return String.valueOf(rowCount);
+
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			        return String.valueOf(rowCount);
+			    }
+			}
+
+
 		 
 }
