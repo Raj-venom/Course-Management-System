@@ -51,7 +51,12 @@ public class Dashboard extends JFrame {
 	private JTextField searchStudentf;
 	private static JTable stdtable;
 	private JTextField txtSearchTutor;
-	private JTable table;
+	private static JTable tutorTable;
+	
+	
+	private static JLabel totalStdbtn;
+	private static JLabel totalTutorbtn;
+	private static JLabel totalCoursebtn ;
 
 	/**
 	 * Launch the application.
@@ -74,6 +79,7 @@ public class Dashboard extends JFrame {
 	 */
 	
 	
+
 	
 	public static void getCourse() {
 		
@@ -117,7 +123,7 @@ public class Dashboard extends JFrame {
 		
 	}
 	
-	
+	// get student data form student_data table
 	public static void getStudent() {
 		
 		
@@ -160,10 +166,50 @@ public class Dashboard extends JFrame {
 		
 	}
 	
+	// get tutor data form tutor_data
+	public static void getTutors() {
+		
+		
+		// inserting course data in table		
+		DefaultTableModel tmodel = (DefaultTableModel)tutorTable.getModel();
+		
+		// clear row for avoiding duplicate data entry
+		 tmodel.setRowCount(0);
+		
+	       String url = "jdbc:mysql://localhost"; 
+	       String username = "root";
+	       String password = "";
+	       	       
+	       
+	       try {
+	           Connection con = DriverManager.getConnection(url, username, password);			           
+	           Statement stmt = con.createStatement();
+
+	           String query = "select * from sms.tutor_data";
+	           ResultSet rs = stmt.executeQuery(query);			    	   
+	    	  			    	   
+	           while(rs.next()) {
+	        	   
+	        	   String did = rs.getString(1);
+	        	   String dname = rs.getString(2);
+	        	   String demail = rs.getString(3);
+	        	   String dphone = rs.getString(4);
+	        	   String dcourse = rs.getString(5);
+
+	        	   String data[]= {did, dname,  demail, dphone, dcourse};
+	        	   tmodel.addRow(data);	        	   
+	           }
+	       }
+			
+			catch (SQLException e1) {
+	     	
+	           e1.printStackTrace();
+
+	       }	
+		
+	}
 	
-	
-	
-	
+
 	
 	public Dashboard() {
 		setTitle("Dashboard");
@@ -199,10 +245,20 @@ public class Dashboard extends JFrame {
 		dashboradbtn.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
 		dashboradbtn.setBackground(new Color(240, 240, 240));
 				
+
 		
 		dashboradbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(0);
+
+				String totalTutor = DataBaseExtension.findTotalColumns("tutor_data");	
+				String totalCourse = DataBaseExtension.findTotalColumns("course");	
+				String totalStudents = DataBaseExtension.findTotalColumns("students_data");	
+				
+							
+				totalStdbtn.setText(totalStudents);
+				totalTutorbtn.setText(totalTutor);
+				totalCoursebtn.setText(totalCourse);
 				
 			}
 		});
@@ -342,6 +398,8 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {			
 				
 				tabbedPane.setSelectedIndex(2);
+				Dashboard.getTutors();
+
 			}
 		});
 		tutorbtn.setBounds(37, 295, 171, 35);
@@ -391,10 +449,95 @@ public class Dashboard extends JFrame {
 		tabbedPane.addTab("New tab", null, dashpanel, null);
 		dashpanel.setLayout(null);
 		
-		JButton btnNewButton_3 = new JButton("dash");
-		btnNewButton_3.setBounds(146, 147, 85, 21);
-		dashpanel.add(btnNewButton_3);
+		JLabel lblNewLabel_2_2 = new JLabel("Dashboard");
+		lblNewLabel_2_2.setBounds(40, 86, 133, 43);
+		lblNewLabel_2_2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
+		dashpanel.add(lblNewLabel_2_2);
 		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setBounds(40, 128, 594, 2);
+		dashpanel.add(separator_2);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(40, 140, 192, 129);
+		dashpanel.add(panel);
+		panel.setLayout(null);
+		
+		// Add a raised bevel border to make it look 3D
+		panel.setBorder(BorderFactory.createRaisedBevelBorder());
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Total Course");
+		lblNewLabel_1_1.setBounds(10, 10, 215, 22);
+		panel.add(lblNewLabel_1_1);
+		lblNewLabel_1_1.setBackground(new Color(0, 142, 142));
+		lblNewLabel_1_1.setForeground(new Color(0, 112, 110));
+		lblNewLabel_1_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 18));
+		
+		String totalCourse = DataBaseExtension.findTotalColumns("course");		
+//		totalCoursebtn.setText(totalCourse);
+		
+		totalCoursebtn = new JLabel(totalCourse);
+		totalCoursebtn.setFont(new Font("Tahoma", Font.BOLD, 30));
+		totalCoursebtn.setBounds(72, 48, 80, 50);
+		panel.add(totalCoursebtn);
+		
+			
+	
+				JPanel panel_1 = new JPanel();
+				panel_1.setBounds(445, 140, 192, 129);
+				dashpanel.add(panel_1);
+
+				
+				// Add a raised bevel border to make it look 3D
+				panel_1.setBorder(BorderFactory.createRaisedBevelBorder());
+				panel_1.setLayout(null);
+				
+				
+				
+				JLabel lblNewLabel_1_1_2 = new JLabel("Total Students");
+				lblNewLabel_1_1_2.setForeground(new Color(0, 112, 110));
+				lblNewLabel_1_1_2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 18));
+				lblNewLabel_1_1_2.setBackground(new Color(0, 142, 142));
+				lblNewLabel_1_1_2.setBounds(10, 10, 215, 22);
+				panel_1.add(lblNewLabel_1_1_2);
+				
+				String totalStudents = DataBaseExtension.findTotalColumns("students_data");		
+//				totalCoursebtn.setText(totalStudents);
+				
+				totalStdbtn = new JLabel(totalStudents);
+				totalStdbtn.setFont(new Font("Tahoma", Font.BOLD, 30));
+				totalStdbtn.setBounds(72, 48, 80, 50);
+				panel_1.add(totalStdbtn);
+				
+			
+				
+				JPanel panel_2 = new JPanel();
+				panel_2.setBounds(242, 140,192, 129);
+				dashpanel.add(panel_2);
+
+				// Add a raised bevel border to make it look 3D
+				panel_2.setBorder(BorderFactory.createRaisedBevelBorder());
+				panel_2.setLayout(null);
+				
+				JLabel lblNewLabel_1_1_1 = new JLabel("Total Teachers");
+				lblNewLabel_1_1_1.setForeground(new Color(0, 112, 110));
+				lblNewLabel_1_1_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 18));
+				lblNewLabel_1_1_1.setBackground(new Color(0, 142, 142));
+				lblNewLabel_1_1_1.setBounds(10, 10, 215, 22);
+				panel_2.add(lblNewLabel_1_1_1);
+				
+				String totalTutor = DataBaseExtension.findTotalColumns("tutor_data");		
+//				totalCoursebtn.setText(totalTutor);
+				
+				
+				totalTutorbtn = new JLabel(totalTutor);
+				totalTutorbtn.setFont(new Font("Tahoma", Font.BOLD, 30));
+				totalTutorbtn.setBounds(72, 48, 80, 50);
+				panel_2.add(totalTutorbtn);
+		
+
+				
+				
 		JPanel coursepanel = new JPanel();
 		tabbedPane.addTab("New tab", null, coursepanel, null);
 		coursepanel.setLayout(null);
@@ -581,8 +724,16 @@ public class Dashboard extends JFrame {
 		scrollPane_1_1.setBounds(52, 197, 581, 408);
 		tutorspanel.add(scrollPane_1_1);
 		
-		table = new JTable();
-		scrollPane_1_1.setViewportView(table);
+		tutorTable = new JTable();
+		tutorTable.setFont(new Font("Tahoma", Font.BOLD, 10));
+		tutorTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Tutor ID", "Tutor Name", "Email", "Phone No.", "Faculty"
+			}
+		));
+		scrollPane_1_1.setViewportView(tutorTable);
 		
 		txtSearchTutor = new JTextField();
 		txtSearchTutor.setBounds(51, 146, 194, 31);
@@ -595,6 +746,13 @@ public class Dashboard extends JFrame {
 		JButton btnAddTutors = new JButton("Add Tutors");
 		btnAddTutors.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				AddTutor  at = new AddTutor();
+				at.setVisible(true);
+				
+			
+				
+				
 			}
 		});
 		btnAddTutors.setBounds(256, 146, 118, 30);
@@ -609,6 +767,10 @@ public class Dashboard extends JFrame {
 		JButton btnEditTutors = new JButton("Edit  Tutors");
 		btnEditTutors.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				EditTutor et = new EditTutor();
+				et.setVisible(true);
+				
 			}
 		});
 		btnEditTutors.setBounds(383, 146, 118, 30);
@@ -625,6 +787,9 @@ public class Dashboard extends JFrame {
 		JButton btnDeleteTutors = new JButton("Delete  Tutors");
 		btnDeleteTutors.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				DeleteTutor dt = new DeleteTutor();
+				dt.setVisible(true);
 			}
 		});
 		btnDeleteTutors.setBounds(510, 146, 121, 30);
