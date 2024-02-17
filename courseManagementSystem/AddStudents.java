@@ -15,6 +15,8 @@ import javax.swing.JButton;
 import javax.swing.UIManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class AddStudents extends JFrame {
 
@@ -24,6 +26,7 @@ public class AddStudents extends JFrame {
 	private JTextField emailf;
 	private JTextField phonef;
 	private JTextField coursef;
+	private JComboBox levelf;
 
 	/**
 	 * Launch the application.
@@ -111,7 +114,8 @@ public class AddStudents extends JFrame {
 				String email = emailf.getText();		
 				String phone = phonef.getText();
 				String course =  coursef.getText();
-	
+				String level = (String) levelf.getSelectedItem();
+			
 				boolean validCourse = DataBaseExtension.checkCourse(course);
 				
 				
@@ -127,7 +131,7 @@ public class AddStudents extends JFrame {
 				else {			
 					
 					// inserting data to sms.students_data
-						boolean res = DataBaseExtension.addStudents(name, email, phone, course);
+						boolean res = DataBaseExtension.addStudents(name, email, phone, course, level);
 					
 					if(res) {
 						
@@ -144,7 +148,7 @@ public class AddStudents extends JFrame {
 		addbtn.setForeground(new Color(0, 100, 0));
 		addbtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		addbtn.setBackground(UIManager.getColor("Button.background"));
-		addbtn.setBounds(148, 405, 140, 40);
+		addbtn.setBounds(238, 413, 140, 40);
 		
 		addbtn.setBackground(new Color(240, 240, 240));
 		addbtn.setForeground(UIManager.getColor("Button.disabledShadow"));
@@ -172,6 +176,18 @@ public class AddStudents extends JFrame {
 		coursef.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		coursef.setBounds(46, 341, 332, 40);
 		panel_1.add(coursef);
+		
+		levelf = new JComboBox();
+		levelf.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		levelf.setModel(new DefaultComboBoxModel(new String[] {"4", "5", "6"}));
+		levelf.setBounds(46, 415, 140, 40);
+		panel_1.add(levelf);
+		
+		JLabel lblLevel = new JLabel();
+		lblLevel.setText("Level");
+		lblLevel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblLevel.setBackground(new Color(102, 102, 102));
+		lblLevel.setBounds(46, 391, 125, 20);
+		panel_1.add(lblLevel);
 	}
-
 }
