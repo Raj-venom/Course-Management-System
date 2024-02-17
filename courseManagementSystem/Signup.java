@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -181,6 +182,9 @@ public class Signup extends JFrame {
 							boolean res = Dbcon.performDatabaseOperations(fullName, email, encPass, userType);
 							
 							if(res) {
+								String message = " Admin: "+ email + " added on " + DataBaseExtension.currentTime();
+								DataBaseExtension.addActivities(message);
+								
 								System.out.println("Sign up as Admin");
 								JOptionPane.showMessageDialog(null, "Sign up as Admin");
 							}
@@ -191,6 +195,9 @@ public class Signup extends JFrame {
 							boolean res = Dbcon.performDatabaseOperations(fullName, email, encPass, userType);
 							
 							if(res) {
+								String message = " Teacher: "+ email + " added on " + DataBaseExtension.currentTime();
+								DataBaseExtension.addActivities(message);
+								
 								System.out.println("Sign up as Teacher");
 								JOptionPane.showMessageDialog(null, "Sign up as Teacher");
 							}
@@ -203,6 +210,10 @@ public class Signup extends JFrame {
 							boolean res = Dbcon.performDatabaseOperations(fullName, email, encPass, userType);
 							
 							if(res) {
+								
+								String message = " Student: "+ email + " added on " + DataBaseExtension.currentTime();
+								DataBaseExtension.addActivities(message);
+								
 								System.out.println("Sign up as Student");
 								JOptionPane.showMessageDialog(null, "Sign up as Student");
 							}
@@ -245,9 +256,14 @@ public class Signup extends JFrame {
 			}
 		});
 		signbtn.setText("Sign Up");
-		signbtn.setForeground(new Color(0, 100, 0));
+		signbtn.setForeground(UIManager.getColor("Button.disabledShadow"));
 		signbtn.setBounds(245, 354, 117, 40);
 		panel_1.add(signbtn);
+		
+		signbtn.setBackground(new Color(240, 240, 240));
+
+			
+		
 		
 		JLabel lblAlreadyHaveAn = new JLabel();
 		lblAlreadyHaveAn.setFont(new Font("Tahoma", Font.PLAIN, 11));

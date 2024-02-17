@@ -18,6 +18,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -89,7 +90,7 @@ public class Login extends JFrame {
 		panel.add(Left);
 		
 		JLabel jLabel1 = new JLabel();
-		jLabel1.setText("LOGIN");
+		jLabel1.setText("Welcome Back!");
 		jLabel1.setForeground(new Color(0, 102, 102));
 		jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 36));
 		
@@ -129,9 +130,13 @@ public class Login extends JFrame {
 							
 				
 				LoginResult checkLogin = Dblogin.loginOperation(email, pass, userType);			
-				if(checkLogin.isSuccess()) {			
+				if(checkLogin.isSuccess()) {	
+					
+					String message = " "+ userType + ": "+ email + " logged in on " + DataBaseExtension.currentTime();
+					DataBaseExtension.addActivities(message);
+					
 					System.out.println("you are logedin as " + checkLogin.getUsername());
-					JOptionPane.showMessageDialog(null, "You are logedin as "+ checkLogin.getUsername());
+					JOptionPane.showMessageDialog(null, "Welcome Back! "+ checkLogin.getUsername());
 					
 					Dashboard dash = new Dashboard();
 					dash.setVisible(true);
@@ -147,8 +152,17 @@ public class Login extends JFrame {
 			}
 		});
 		signbtn.setText("Login");
-		signbtn.setForeground(new Color(0, 102, 102));
+		signbtn.setForeground(UIManager.getColor("Button.disabledShadow"));
 		signbtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		
+		//
+
+		
+		signbtn.setBackground(new Color(240, 240, 240));
+
+		
+		//
 		
 		JLabel lblSignUp = new JLabel("Sign Up");
 		lblSignUp.addMouseListener(new MouseAdapter() {
@@ -169,34 +183,33 @@ public class Login extends JFrame {
 		gl_Left.setHorizontalGroup(
 			gl_Left.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_Left.createSequentialGroup()
+					.addGap(30)
 					.addGroup(gl_Left.createParallelGroup(Alignment.LEADING)
+						.addComponent(jLabel2)
+						.addComponent(Email, 343, 343, 343)
+						.addComponent(jLabel3)
+						.addComponent(password, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
 						.addGroup(gl_Left.createSequentialGroup()
-							.addGap(138)
-							.addComponent(jLabel1))
+							.addComponent(mode, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+							.addComponent(signbtn, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+							.addGap(8))
 						.addGroup(gl_Left.createSequentialGroup()
-							.addGap(30)
-							.addGroup(gl_Left.createParallelGroup(Alignment.LEADING)
-								.addComponent(jLabel2)
-								.addComponent(Email, 343, 343, 343)
-								.addComponent(jLabel3)
-								.addComponent(password, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-								.addGroup(gl_Left.createSequentialGroup()
-									.addComponent(mode, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-									.addComponent(signbtn, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-									.addGap(8))
-								.addGroup(gl_Left.createSequentialGroup()
-									.addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblSignUp, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))))
+							.addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblSignUp, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(27, Short.MAX_VALUE))
+				.addGroup(gl_Left.createSequentialGroup()
+					.addGap(67)
+					.addComponent(jLabel1)
+					.addContainerGap(74, Short.MAX_VALUE))
 		);
 		gl_Left.setVerticalGroup(
 			gl_Left.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_Left.createSequentialGroup()
-					.addGap(51)
+					.addGap(48)
 					.addComponent(jLabel1)
-					.addGap(40)
+					.addGap(43)
 					.addComponent(jLabel2)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(Email, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)

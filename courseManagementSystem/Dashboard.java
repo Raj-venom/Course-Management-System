@@ -57,6 +57,7 @@ public class Dashboard extends JFrame {
 	private static JLabel totalStdbtn;
 	private static JLabel totalTutorbtn;
 	private static JLabel totalCoursebtn ;
+	private static JTable activityTable;
 
 	/**
 	 * Launch the application.
@@ -79,7 +80,46 @@ public class Dashboard extends JFrame {
 	 */
 	
 	
+	// get  Activities History
+	public static void getActivities() {
+		
+			
+		DefaultTableModel tmodel = (DefaultTableModel)activityTable.getModel();
+		
+		// clear row for avoiding duplicate data entry
+		 tmodel.setRowCount(0);
+		
+	       String url = "jdbc:mysql://localhost"; 
+	       String username = "root";
+	       String password = "";
+	       
+	       try {
+	           Connection con = DriverManager.getConnection(url, username, password);			           
+	           Statement stmt = con.createStatement();
 
+	           String query = "select * from sms.activities";
+	           ResultSet rs = stmt.executeQuery(query);			    	   
+	    	  			    	   
+	           while(rs.next()) {
+	        	   
+	        	   String did = rs.getString(1);
+	         	   String dactivity = rs.getString(2);
+
+
+	         	   String data[]= {did, dactivity};
+	         	   tmodel.addRow(data);	        	   
+	           }
+	       }
+			
+			catch (SQLException e1) {
+	     	
+	           e1.printStackTrace();
+
+	       }
+	
+
+ 
+	}
 	
 	public static void getCourse() {
 		
@@ -152,8 +192,9 @@ public class Dashboard extends JFrame {
 	        	   String demail = rs.getString(3);
 	        	   String dphone = rs.getString(4);
 	        	   String dcourse = rs.getString(5);
+	        	   String dlevel = rs.getString(6);
 
-	        	   String data[]= {did, dname,  demail, dphone, dcourse};
+	        	   String data[]= {did, dname,  demail, dphone, dcourse, dlevel};
 	        	   tmodel.addRow(data);	        	   
 	           }
 	       }
@@ -245,7 +286,7 @@ public class Dashboard extends JFrame {
 		dashboradbtn.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
 		dashboradbtn.setBackground(new Color(240, 240, 240));
 				
-
+	
 		
 		dashboradbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -259,7 +300,7 @@ public class Dashboard extends JFrame {
 				totalStdbtn.setText(totalStudents);
 				totalTutorbtn.setText(totalTutor);
 				totalCoursebtn.setText(totalCourse);
-				
+				getActivities();
 			}
 		});
 		dashboradbtn.setBounds(37, 183, 171, 35);
@@ -470,7 +511,7 @@ public class Dashboard extends JFrame {
 		lblNewLabel_1_1.setBounds(10, 10, 215, 22);
 		panel.add(lblNewLabel_1_1);
 		lblNewLabel_1_1.setBackground(new Color(0, 142, 142));
-		lblNewLabel_1_1.setForeground(new Color(0, 112, 110));
+		lblNewLabel_1_1.setForeground(new Color(0, 100, 100));
 		lblNewLabel_1_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 18));
 		
 		String totalCourse = DataBaseExtension.findTotalColumns("course");		
@@ -495,7 +536,7 @@ public class Dashboard extends JFrame {
 				
 				
 				JLabel lblNewLabel_1_1_2 = new JLabel("Total Students");
-				lblNewLabel_1_1_2.setForeground(new Color(0, 112, 110));
+				lblNewLabel_1_1_2.setForeground(new Color(0, 100, 100));
 				lblNewLabel_1_1_2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 18));
 				lblNewLabel_1_1_2.setBackground(new Color(0, 142, 142));
 				lblNewLabel_1_1_2.setBounds(10, 10, 215, 22);
@@ -512,7 +553,7 @@ public class Dashboard extends JFrame {
 			
 				
 				JPanel panel_2 = new JPanel();
-				panel_2.setBounds(242, 140,192, 129);
+				panel_2.setBounds(242, 140, 192, 129);
 				dashpanel.add(panel_2);
 
 				// Add a raised bevel border to make it look 3D
@@ -520,7 +561,7 @@ public class Dashboard extends JFrame {
 				panel_2.setLayout(null);
 				
 				JLabel lblNewLabel_1_1_1 = new JLabel("Total Teachers");
-				lblNewLabel_1_1_1.setForeground(new Color(0, 112, 110));
+				lblNewLabel_1_1_1.setForeground(new Color(0, 100, 100));
 				lblNewLabel_1_1_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 18));
 				lblNewLabel_1_1_1.setBackground(new Color(0, 142, 142));
 				lblNewLabel_1_1_1.setBounds(10, 10, 215, 22);
@@ -534,8 +575,35 @@ public class Dashboard extends JFrame {
 				totalTutorbtn.setFont(new Font("Tahoma", Font.BOLD, 30));
 				totalTutorbtn.setBounds(72, 48, 80, 50);
 				panel_2.add(totalTutorbtn);
+				
+				JLabel lblNewLabel_1_1_3 = new JLabel("Activities History");
+				lblNewLabel_1_1_3.setBounds(40, 280, 215, 22);
+				lblNewLabel_1_1_3.setForeground(new Color(0, 100, 100));
+				lblNewLabel_1_1_3.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+				lblNewLabel_1_1_3.setBackground(new Color(0, 100, 100));
+				dashpanel.add(lblNewLabel_1_1_3);
+				
+				JScrollPane scrollPane_2 = new JScrollPane();
+				scrollPane_2.setBounds(40, 310, 580, 302);
+				dashpanel.add(scrollPane_2);
+				
+				activityTable = new JTable();
+				activityTable.setFont(new Font("Tahoma", Font.BOLD, 10));
+				scrollPane_2.setViewportView(activityTable);
+				activityTable.setModel(new DefaultTableModel(
+					new Object[][] {
+						
+					},
+					new String[] {
+						"ID", "Activities Name"
+					}
+				));
+				activityTable.getColumnModel().getColumn(0).setPreferredWidth(15);
+				activityTable.getColumnModel().getColumn(0).setMinWidth(55);
+				activityTable.getColumnModel().getColumn(0).setMaxWidth(55);
+				activityTable.getColumnModel().getColumn(1).setPreferredWidth(316);
 		
-
+				getActivities();
 				
 				
 		JPanel coursepanel = new JPanel();
@@ -560,11 +628,15 @@ public class Dashboard extends JFrame {
 		scrollPane.setViewportView(coursetable);
 		coursetable.setModel(new DefaultTableModel(
 			new Object[][] {
+				
 			},
 			new String[] {
 				"Course ID", "Course Name", "Seats", "Batch", "No. of Years"
 			}
 		));
+		coursetable.getColumnModel().getColumn(0).setPreferredWidth(45);
+		coursetable.getColumnModel().getColumn(0).setMinWidth(65);
+		coursetable.getColumnModel().getColumn(0).setMaxWidth(65);
 		
 				
 		courseSearchf = new JTextField();
@@ -819,16 +891,17 @@ public class Dashboard extends JFrame {
 		stdtable.setFont(new Font("Tahoma", Font.BOLD, 10));
 		stdtable.setModel(new DefaultTableModel(
 			new Object[][] {
+				
 			},
 			new String[] {
-				"Student ID", "Full Name", "Email", "Phone No.", "Enlored Course"
+				"S.ID", "Full Name", "Email", "Phone No.", "Enlored Course", "level"
 			}
 		));
 		stdtable.getColumnModel().getColumn(0).setPreferredWidth(65);
 		stdtable.getColumnModel().getColumn(1).setPreferredWidth(122);
-		stdtable.getColumnModel().getColumn(2).setPreferredWidth(165);
-		stdtable.getColumnModel().getColumn(3).setPreferredWidth(91);
-		stdtable.getColumnModel().getColumn(4).setPreferredWidth(163);
+		stdtable.getColumnModel().getColumn(2).setPreferredWidth(185);
+		stdtable.getColumnModel().getColumn(3).setPreferredWidth(160);
+		stdtable.getColumnModel().getColumn(4).setPreferredWidth(143);
 		scrollPane_1.setViewportView(stdtable);
 		
 		searchStudentf = new JTextField();
@@ -871,8 +944,9 @@ public class Dashboard extends JFrame {
 			    	        	   String demail = rs.getString(3);
 			    	        	   String dphone = rs.getString(4);
 			    	        	   String dcourse = rs.getString(5);
+			    	        	   String dlevel = rs.getString(6);
 
-			    	        	   String data[]= {did, dname,  demail, dphone, dcourse};
+			    	        	   String data[]= {did, dname,  demail, dphone, dcourse, dlevel};
 			    	        	   tmodel.addRow(data);	        	   
 			    	           }
 			                    
