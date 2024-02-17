@@ -6,6 +6,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import javax.swing.table.DefaultTableModel;
 
 import courseManagementSystem.Dblogin.LoginResult;
 
@@ -16,9 +20,165 @@ public class DataBaseExtension {
 	
 	public static void main(String[] args) {
 		
-		
+
+
 		
 	}
+	
+	
+
+	
+	
+	
+		// inserting module name
+		public static boolean addModule(String sid, String lvl, String module1, String module2) {
+			
+	        String url = "jdbc:mysql://localhost"; 
+	        String username = "root";
+	        String password = "";
+    		        
+	        try {
+	            Connection con = DriverManager.getConnection(url, username, password);
+	            
+	            Statement stmt = con.createStatement();
+
+	            String query = " CREATE DATABASE IF NOT EXISTS sms";           
+	            stmt.executeUpdate(query);
+
+	            String createTable = "CREATE TABLE IF NOT EXISTS sms.modules "
+	            		+"(sid varchar(100), "	
+	            		+"level varchar(50),"
+	            		+"module1 varchar(100),"
+	            		+"module2 varchar(100))";
+	            		            
+//	          Execute the SQL statement to create the table
+	            stmt.executeUpdate(createTable);
+
+	            
+	            String data = "INSERT INTO sms.modules (sid, level, module1, module2 ) VALUES('" + sid + "','" + lvl + "','" + module1 + "','" + module2 + "')";          
+	            int res = stmt.executeUpdate(data);
+	            
+	            if(res ==1) {
+	            	return true;
+	            }else {
+	            	return false;
+	            }
+	            
+	            
+        } catch (SQLException e) {
+        	
+            e.printStackTrace();
+            return false;
+        }
+			
+		}
+	
+		// inserting marks in module
+		public static boolean addMarks(String sid, String lvl, String marks1, String marks2) {
+			
+	        String url = "jdbc:mysql://localhost"; 
+	        String username = "root";
+	        String password = "";
+    		        
+	        try {
+	            Connection con = DriverManager.getConnection(url, username, password);
+	            
+	            Statement stmt = con.createStatement();
+
+	            String query = " CREATE DATABASE IF NOT EXISTS sms";           
+	            stmt.executeUpdate(query);
+
+	            String createTable = "CREATE TABLE IF NOT EXISTS sms.marks "
+	            		+"(sid varchar(100), "	
+	            		+"level varchar(50),"
+	            		+"marks1 varchar(100),"
+	            		+"marks2 varchar(100))";
+	            		            
+//	          Execute the SQL statement to create the table
+	            stmt.executeUpdate(createTable);
+
+	            
+	            String data = "INSERT INTO sms.marks (sid, level, marks1, marks2 ) VALUES('" + sid + "','" + lvl + "','" + marks1 + "','" + marks2 + "')";          
+	            int res = stmt.executeUpdate(data);
+	            
+	            if(res ==1) {
+	            	return true;
+	            }else {
+	            	return false;
+	            }
+	            
+	            
+        } catch (SQLException e) {
+        	
+            e.printStackTrace();
+            return false;
+        }
+			
+		}
+		
+		
+	
+		// Activities History
+		public static boolean addActivities(String activity) {
+	        String url = "jdbc:mysql://localhost"; 
+	        String username = "root";
+	        String password = "";
+    		        
+	        try {
+	            Connection con = DriverManager.getConnection(url, username, password);
+	            
+	            Statement stmt = con.createStatement();
+
+	            String query = " CREATE DATABASE IF NOT EXISTS sms";           
+	            stmt.executeUpdate(query);
+
+	            String createTable = "CREATE TABLE IF NOT EXISTS sms.activities "
+	            		+ "(id INT AUTO_INCREMENT PRIMARY KEY, "		            																						
+	            		+ "activity varchar(300))";
+	            
+	            
+//	          Execute the SQL statement to create the table
+	            stmt.executeUpdate(createTable);
+
+	            
+	            String data = "INSERT INTO sms.activities (activity ) VALUES('" + activity + "')";          
+	            int res = stmt.executeUpdate(data);
+	            
+	            if(res ==1) {
+	            	return true;
+	            }else {
+	            	return false;
+	            }
+	            
+	            
+        } catch (SQLException e) {
+        	
+            e.printStackTrace();
+            return false;
+        }
+        
+		}
+
+		
+		// get current time
+		public static String currentTime() {
+			
+		        // Get the current date and time
+		        LocalDateTime currentDateTime = LocalDateTime.now();
+
+		        // Define a format for the date and time
+		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+		        // Format the current date and time using the defined format
+		        String formattedDateTime = currentDateTime.format(formatter);
+
+		        // Print the formatted current date and time
+//		        System.out.println("Current Date and Time: " + formattedDateTime);
+
+			
+			return formattedDateTime;
+			
+		}
 		
 	
 		// Creating course 
@@ -164,7 +324,51 @@ public class DataBaseExtension {
 		       
 			 }
 		 
-		 
+		 // check student in data base with sid and level
+		 public static boolean checkStudent(String sid, String level) {
+		       String url = "jdbc:mysql://localhost"; 
+		       String username = "root";
+		       String password = "";
+			
+		       
+		       try {
+		           Connection con = DriverManager.getConnection(url, username, password);	           
+		           Statement stmt = con.createStatement();
+		           
+		           String query = "select * from sms.students_data";
+		           ResultSet rs = stmt.executeQuery(query);
+
+		    	   boolean check = false;   
+		    	   
+		    	   
+		           while(rs.next()) {
+		        	  
+		        	   String did = rs.getString(1);
+		        	   String dlevel = rs.getString(6);
+
+		        	   if(did.equals(sid) ) {	        	
+		        	   
+		        	   if(dlevel.equals(level)) {		            	  
+		            	   check = true;
+		                   break;  
+		        	   }
+		        	   }
+		           }
+
+		           if (check) {
+		        	   System.out.println("Student found!");
+		               return true;
+		           } else {
+		               System.out.println("Student not Found!");
+		               return false;
+		           }
+		       }
+				
+				catch (SQLException e) {
+     	
+		           e.printStackTrace();
+		           return false;		       }		       
+			 }
 		 
 		 // delete course 
 		 public static boolean deleteCourse(String id) {
@@ -208,7 +412,7 @@ public class DataBaseExtension {
 		 
 		 
 		// Add Students on sms.students_data
-		 public static boolean addStudents(String fullName, String email, String phoneNo, String course) {
+		 public static boolean addStudents(String fullName, String email, String phoneNo, String course, String level) {
 
 		     String url = "jdbc:mysql://localhost";
 		     String username = "root";
@@ -230,12 +434,13 @@ public class DataBaseExtension {
 		                 + "name VARCHAR(100), "
 		                 + "email VARCHAR(100), "
 		                 + "phoneNo VARCHAR(20), "
-		                 + "course VARCHAR(100))";
+		                 + "course VARCHAR(100), "
+		                 + "level VARCHAR(100))";
 
 		         stmt.executeUpdate(createTableQuery);
 
-		         String insertDataQuery = "INSERT INTO sms.students_data (name, email, phoneNo, course) VALUES"
-		         		+ "('"+ fullName + "','" + email + "','" + phoneNo + "','" + course + "')";
+		         String insertDataQuery = "INSERT INTO sms.students_data (name, email, phoneNo, course, level) VALUES "
+		        		    + "('" + fullName + "','" + email + "','" + phoneNo + "','" + course + "','" + level + "')";
 
 		         stmt.executeUpdate(insertDataQuery);
 
@@ -293,7 +498,7 @@ public class DataBaseExtension {
 		 
 		 
 		 // Update Students details	of sms.students_data	 
-		 public static int editStudent( String StudentId,String StudentName,   String email, String phone, String course) {
+		 public static int editStudent( String StudentId,String StudentName,   String email, String phone, String course, String level) {
 			 
 		
 		        String url = "jdbc:mysql://localhost"; 
@@ -310,7 +515,8 @@ public class DataBaseExtension {
 		                    + "name = '" + StudentName + "', "
 		                    + "email = '" + email + "', "
 		                    + "phoneNo = '" + phone + "', "
-		                    + "course = '" + course + "' "
+		                    + "course = '" + course + "', "
+		                    + "level = '" + level + "' " 
 		                    + "WHERE id = " + StudentId;
 
 
