@@ -21,14 +21,193 @@ public class DataBaseExtension {
 	public static void main(String[] args) {
 		
 
+	}
+	
+	
+	// Update Password
+	public static boolean updatePassword(String useremail,String pass, String table) {
+
+	        String url = "jdbc:mysql://localhost"; 
+	        String username = "root";
+	        String password = "";
+			        
+	        try {
+	            Connection con = DriverManager.getConnection(url, username, password);
+	            Statement stmt = con.createStatement();
+	            
+	            String updateQuery = "UPDATE sms." + table
+	            	    + " SET "	            	   
+	            	    + "password = '" + pass + "' "
+	            	    + "WHERE email = '" + useremail + "'";
+
+
+	            int res = stmt.executeUpdate(updateQuery);
+
+	            System.out.println("\nsuccessfully updataed"); 
+	            
+	            stmt.close();
+	            con.close();
+	            
+	            if(res == 1) {
+	            	return true;
+	            } else {
+	            	return false;
+	            }    
+	            
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+		
+	}
+	
+	
+	
+	// Search user from database
+	public static String[] searchUser(String email, String tableName) {
+					
+
+		
+	    String url = "jdbc:mysql://localhost";
+	    String username = "root";
+	    String password = "";
+
+	    int rowCount = 0;
+	    String data[] = {"", ""};
+	    try {
+	        Connection con = DriverManager.getConnection(url, username, password);
+
+	        Statement stmt = con.createStatement();
+
+	        String query = "SELECT * FROM sms." + tableName + " WHERE email = '" + email + "'";
+  
+	        ResultSet rs = stmt.executeQuery(query);
+	        
+
+	        while (rs.next()) {
+	            rowCount++;
+	            
+	        	   
+	        	   String dname = rs.getString(2);
+	         	   String demail = rs.getString(3);
+
+
+	         	   data[0] = dname;
+	         	   data[1] = demail;
+	         	   
+	         	   System.out.println(dname);
+	         	   System.out.println(demail);
+
+	        }
+
+	        System.out.println("\ntotal rows: " + rowCount);
+
+	        stmt.close();
+	        con.close();
+
+	     // String convert 
+	        return data;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return data;
+	    }
+		
+
+	}
+	
+	
+	// Update Profile
+	public static boolean editProfile( String name, String email, String table, String useremail) {
+		
+
+        String url = "jdbc:mysql://localhost"; 
+        String username = "root";
+        String password = "";
+		        
+        try {
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement stmt = con.createStatement();
+            
+            String updateQuery = "UPDATE sms." + table
+            	    + " SET "
+            	    + "fullname = '" + name + "', "
+            	    + "email = '" + email + "' "
+            	    + "WHERE email = '" + useremail + "'";
+
+
+            int res = stmt.executeUpdate(updateQuery);
+
+            System.out.println("\nsuccessfully updataed"); 
+            
+            stmt.close();
+            con.close();
+            
+            if(res == 1) {
+            	return true;
+            } else {
+            	return false;
+            }
+            
+         
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
 
 		
 	}
 	
 	
+	
+	// add result 	
+	public static boolean addResult(String sid, String lvl, String module,  String marks) {
+		
+        String url = "jdbc:mysql://localhost"; 
+        String username = "root";
+        String password = "";
+		        
+        try {
+            Connection con = DriverManager.getConnection(url, username, password);
+            
+            Statement stmt = con.createStatement();
 
+            String query = " CREATE DATABASE IF NOT EXISTS sms";           
+            stmt.executeUpdate(query);
+
+            String createTable = "CREATE TABLE IF NOT EXISTS sms.result "
+            		+"(sid varchar(100), "	
+            		+"level varchar(50),"
+            		+"module varchar(100),"
+            		+"marks varchar(100))";
+            		            
+//          Execute the SQL statement to create the table
+            stmt.executeUpdate(createTable);
+
+            
+            String data = "INSERT INTO sms.result (sid, level, module, marks ) VALUES('" + sid + "','" + lvl + "','" + module + "','" + marks + "')";          
+            int res = stmt.executeUpdate(data);
+            
+            
+          
+            stmt.close();
+            con.close();
+            
+            if(res ==1) {
+            	return true;
+            }else {
+            	return false;
+            }
+            
+            
+    } catch (SQLException e) {
+    	
+        e.printStackTrace();
+        return false;
+    }
 	
-	
+	}
 	
 		// inserting module name
 		public static boolean addModule(String sid, String lvl, String module1, String module2) {
@@ -58,12 +237,18 @@ public class DataBaseExtension {
 	            String data = "INSERT INTO sms.modules (sid, level, module1, module2 ) VALUES('" + sid + "','" + lvl + "','" + module1 + "','" + module2 + "')";          
 	            int res = stmt.executeUpdate(data);
 	            
+	           
+                stmt.close();
+                con.close();
+	            
 	            if(res ==1) {
 	            	return true;
 	            }else {
 	            	return false;
 	            }
 	            
+	            
+               
 	            
         } catch (SQLException e) {
         	
@@ -100,6 +285,11 @@ public class DataBaseExtension {
 	            
 	            String data = "INSERT INTO sms.marks (sid, level, marks1, marks2 ) VALUES('" + sid + "','" + lvl + "','" + marks1 + "','" + marks2 + "')";          
 	            int res = stmt.executeUpdate(data);
+	            
+	            
+	          
+                stmt.close();
+                con.close();
 	            
 	            if(res ==1) {
 	            	return true;
@@ -143,6 +333,10 @@ public class DataBaseExtension {
 	            
 	            String data = "INSERT INTO sms.activities (activity ) VALUES('" + activity + "')";          
 	            int res = stmt.executeUpdate(data);
+	            
+	           
+                stmt.close();
+                con.close();
 	            
 	            if(res ==1) {
 	            	return true;
@@ -304,6 +498,11 @@ public class DataBaseExtension {
 
 		           if (check) {
 		        	   System.out.println("email exists");
+		        	   
+		               rs.close();
+	                    stmt.close();
+	                    con.close();
+	                    
 		        	   return true;
 		        	  
 		           } else {
@@ -348,18 +547,31 @@ public class DataBaseExtension {
 
 		        	   if(did.equals(sid) ) {	        	
 		        	   
-		        	   if(dlevel.equals(level)) {		            	  
-		            	   check = true;
-		                   break;  
-		        	   }
+		        		   check = true;
+		                   break;
+//		        	   if(dlevel.equals(level)) {		            	  
+//		            	   check = true;
+//		                   break;  
+//		        	   }
+		                   
+		                   
 		        	   }
 		           }
 
 		           if (check) {
 		        	   System.out.println("Student found!");
+		        	   
+		               rs.close();
+	                    stmt.close();
+	                    con.close();
+		        	   
 		               return true;
 		           } else {
 		               System.out.println("Student not Found!");
+		               rs.close();
+	                    stmt.close();
+	                    con.close();
+		               
 		               return false;
 		           }
 		       }
@@ -566,6 +778,11 @@ public class DataBaseExtension {
 		  
 		        	   }
 		           }
+		           
+		           
+		           rs.close();
+                   stmt.close();
+                   con.close();
 
 		           if (check) {
 		        	   System.out.println("course exists");
