@@ -79,7 +79,7 @@ public class Login extends JFrame {
 		panel.add(panel_1);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon("D:\\java IDE\\Registration_System\\src\\CourseManagementSystem\\img\\Herald.png"));
+		lblNewLabel_1.setIcon(new ImageIcon("D:\\java IDE\\Project\\src\\logo\\Herald.png"));
 		lblNewLabel_1.setBounds(10, 65, 537, 179);
 		panel_1.add(lblNewLabel_1);
 		
@@ -139,6 +139,10 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(null, "Welcome Back! "+ checkLogin.getUsername());
 					
 					Dashboard dash = new Dashboard();
+					
+					Dashboard.userEmail = email;
+					Dashboard.tableName = userType;
+					
 					dash.setVisible(true);
 					dispose();
 					

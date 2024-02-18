@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
@@ -33,7 +34,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-
+import courseManagementSystem.Dblogin.LoginResult;
 
 import javax.swing.JScrollPane;
 import java.awt.event.InputMethodListener;
@@ -58,6 +59,14 @@ public class Dashboard extends JFrame {
 	private static JLabel totalTutorbtn;
 	private static JLabel totalCoursebtn ;
 	private static JTable activityTable;
+	private JTextField namef;
+	private JTextField emailf;
+	private JTextField oldPassf;
+	private JTextField newPassf;
+	
+	public static String userEmail;
+	public static String tableName;
+	
 
 	/**
 	 * Launch the application.
@@ -78,6 +87,9 @@ public class Dashboard extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	
+
 	
 	
 	// get  Activities History
@@ -301,6 +313,9 @@ public class Dashboard extends JFrame {
 				totalTutorbtn.setText(totalTutor);
 				totalCoursebtn.setText(totalCourse);
 				getActivities();
+				
+			
+				
 			}
 		});
 		dashboradbtn.setBounds(37, 183, 171, 35);
@@ -356,6 +371,27 @@ public class Dashboard extends JFrame {
 		left.add(mailbtn);
 		
 		JButton settingbtn = new JButton("  Settings");
+		settingbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(4);
+				
+//				System.out.println("User Email: " + userEmail);
+//				System.out.println("table Name" + tableName);
+				
+				String resdata[] = DataBaseExtension.searchUser(userEmail, tableName);
+				
+				String uname = resdata[0];
+				String uemail = resdata[1];
+				
+				
+				namef.setText(uname);
+				emailf.setText(uemail);
+				
+				System.out.println("User Email: " + uemail);
+				System.out.println("table Name" + uname);
+				
+			}
+		});
 		settingbtn.setIcon(new ImageIcon("D:\\java IDE\\Project\\src\\logo\\gear.png"));
 		
 		settingbtn.setForeground(UIManager.getColor("Button.disabledShadow"));
@@ -500,6 +536,15 @@ public class Dashboard extends JFrame {
 		dashpanel.add(separator_2);
 		
 		JPanel panel = new JPanel();
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+								
+				tabbedPane.setSelectedIndex(1);				
+				getCourse();
+				
+			}
+		});
 		panel.setBounds(40, 140, 192, 129);
 		dashpanel.add(panel);
 		panel.setLayout(null);
@@ -525,6 +570,15 @@ public class Dashboard extends JFrame {
 			
 	
 				JPanel panel_1 = new JPanel();
+				panel_1.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						
+						tabbedPane.setSelectedIndex(3);
+						
+						getStudent();
+					}
+				});
 				panel_1.setBounds(445, 140, 192, 129);
 				dashpanel.add(panel_1);
 
@@ -553,6 +607,13 @@ public class Dashboard extends JFrame {
 			
 				
 				JPanel panel_2 = new JPanel();
+				panel_2.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						tabbedPane.setSelectedIndex(2);
+						Dashboard.getTutors();
+					}
+				});
 				panel_2.setBounds(242, 140, 192, 129);
 				dashpanel.add(panel_2);
 
@@ -584,7 +645,7 @@ public class Dashboard extends JFrame {
 				dashpanel.add(lblNewLabel_1_1_3);
 				
 				JScrollPane scrollPane_2 = new JScrollPane();
-				scrollPane_2.setBounds(40, 310, 580, 302);
+				scrollPane_2.setBounds(40, 310, 594, 302);
 				dashpanel.add(scrollPane_2);
 				
 				activityTable = new JTable();
@@ -808,9 +869,75 @@ public class Dashboard extends JFrame {
 		scrollPane_1_1.setViewportView(tutorTable);
 		
 		txtSearchTutor = new JTextField();
+		txtSearchTutor.setText("Search Tutor");
+		txtSearchTutor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				txtSearchTutor.setText("");
+			}		
+			
+		});
+		txtSearchTutor.addKeyListener(new KeyAdapter() {
+			
+			  @Override
+			    public void keyPressed(KeyEvent e) {
+				  
+				  // Check for Enter key is pressed
+			        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			          
+			            String enteredText = txtSearchTutor.getText();
+			            System.out.println("Text entered: " + enteredText);
+			            
+			            
+			            // search course by ID			    
+			                String url = "jdbc:mysql://localhost";
+			                String username = "root";
+			                String password = "";
+				
+							DefaultTableModel tmodel = (DefaultTableModel)tutorTable.getModel();
+							
+							// clear row for avoiding duplicate data entry
+							 tmodel.setRowCount(0);
+
+			                try {
+			                    Connection con = DriverManager.getConnection(url, username, password);
+			                    Statement stmt = con.createStatement();
+			                    
+			                    String query = "SELECT * FROM sms.tutor_data WHERE name = '" + enteredText + "'";
+
+			                    ResultSet rs = stmt.executeQuery(query);
+
+			                    
+			                    if (rs.next()) {
+			    	        	   
+			    	        	   String did = rs.getString(1);
+			    	        	   String dname = rs.getString(2);
+			    	        	   String demail = rs.getString(3);
+			    	        	   String dphone = rs.getString(4);
+			    	        	   String dfaculty = rs.getString(5);
+			    	        	  
+
+			    	        	   String data[]= {did, dname,  demail, dphone, dfaculty };
+			    	        	   tmodel.addRow(data);	        	   
+			    	           }
+			                    
+			                    
+			                    rs.close();
+			                    stmt.close();
+			                    con.close();			                    
+
+			                } catch (SQLException e1111) {
+			                    e1111.printStackTrace();
+			                   
+			                }			            
+			        }
+			    }
+			
+		});
 		txtSearchTutor.setBounds(51, 146, 194, 31);
 		txtSearchTutor.setToolTipText("");
-		txtSearchTutor.setText("Search Tutor");
+	
 		txtSearchTutor.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtSearchTutor.setColumns(10);
 		tutorspanel.add(txtSearchTutor);
@@ -1032,5 +1159,242 @@ public class Dashboard extends JFrame {
 		
 		JPanel settingpanel = new JPanel();
 		tabbedPane.addTab("New tab", null, settingpanel, null);
+		settingpanel.setLayout(null);
+		
+		JLabel lblNewLabel_2_1_2 = new JLabel("Settings");
+		lblNewLabel_2_1_2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 24));
+		lblNewLabel_2_1_2.setBounds(40, 83, 180, 43);
+		settingpanel.add(lblNewLabel_2_1_2);
+		
+		JSeparator separator_1_2 = new JSeparator();
+		separator_1_2.setBounds(40, 122, 574, 2);
+		settingpanel.add(separator_1_2);
+		
+		
+		
+		namef = new JTextField();
+		namef.setToolTipText("");
+		namef.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		namef.setColumns(10);
+		namef.setBounds(146, 189, 194, 31);
+		settingpanel.add(namef);
+		
+		JLabel lblNewLabel_1_1_3_1 = new JLabel("General Profile");
+		lblNewLabel_1_1_3_1.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 17));
+		lblNewLabel_1_1_3_1.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1.setBounds(40, 145, 215, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1);
+		
+		JSeparator separator_1_2_1 = new JSeparator();
+		separator_1_2_1.setBounds(40, 172, 136, 2);
+		settingpanel.add(separator_1_2_1);
+		
+		JLabel lblNewLabel_1_1_3_1_1 = new JLabel("UserName");
+		lblNewLabel_1_1_3_1_1.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1.setFont(new Font("Microsoft YaHei", Font.BOLD, 15));
+		lblNewLabel_1_1_3_1_1.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1_1.setBounds(45, 193, 215, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1);
+		
+		JLabel lblNewLabel_1_1_3_1_1_1_1 = new JLabel("Email");
+		lblNewLabel_1_1_3_1_1_1_1.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1_1_1.setFont(new Font("Microsoft YaHei", Font.BOLD, 15));
+		lblNewLabel_1_1_3_1_1_1_1.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1_1_1_1.setBounds(45, 239, 90, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_1_1);
+		
+		emailf = new JTextField();
+		emailf.setToolTipText("");
+		
+		//  update from database 
+//		emailf.setText(uemail);
+		
+		emailf.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		emailf.setColumns(10);
+		emailf.setBounds(145, 230, 195, 31);
+		settingpanel.add(emailf);
+		
+		JButton profilebtn = new JButton("Update Profile");
+		profilebtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String name = namef.getText();
+				String email = emailf.getText();
+				
+			
+				boolean emailres = DataBaseExtension.checkEmail(email, tableName);
+
+				if(emailres) {
+					JOptionPane.showMessageDialog(null, "Email already Exists");
+				}
+				else {
+				
+				boolean res = DataBaseExtension.editProfile(name, email, tableName, userEmail);
+				
+				if(res) {
+					JOptionPane.showMessageDialog(null, "Profile Updated");
+				
+					namef.setText(name);
+					emailf.setText(email);
+					
+					System.out.println("User Email: " + email);
+					System.out.println("table Name" + name);
+					
+				}else {
+					JOptionPane.showMessageDialog(null, "Login Again and try ");
+				}
+				
+				}
+				
+			}
+		});
+		profilebtn.setForeground(UIManager.getColor("Button.disabledShadow"));
+		profilebtn.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
+		profilebtn.setBackground(new Color(240, 240, 240));
+		profilebtn.setBounds(45, 276, 145, 35);
+		
+		profilebtn.setBorder(BorderFactory.createRaisedBevelBorder());
+		
+		settingpanel.add(profilebtn);
+		
+		JLabel lblNewLabel_1_1_3_1_2 = new JLabel("Security & Login");
+		lblNewLabel_1_1_3_1_2.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 17));
+		lblNewLabel_1_1_3_1_2.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1_2.setBounds(40, 329, 215, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_2);
+		
+		JSeparator separator_1_2_1_1 = new JSeparator();
+		separator_1_2_1_1.setBounds(40, 358, 150, 2);
+		settingpanel.add(separator_1_2_1_1);
+		
+		JLabel lblNewLabel_1_1_3_1_1_2 = new JLabel("Old Password");
+		lblNewLabel_1_1_3_1_1_2.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1_2.setFont(new Font("Microsoft YaHei", Font.BOLD, 15));
+		lblNewLabel_1_1_3_1_1_2.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1_1_2.setBounds(42, 378, 114, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_2);
+		
+		oldPassf = new JTextField();
+		oldPassf.setToolTipText("");
+		oldPassf.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		oldPassf.setColumns(10);
+		oldPassf.setBounds(155, 373, 157, 31);
+		settingpanel.add(oldPassf);
+		
+		JLabel lblNewLabel_1_1_3_1_1_3 = new JLabel("New Password");
+		lblNewLabel_1_1_3_1_1_3.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1_3.setFont(new Font("Microsoft YaHei", Font.BOLD, 15));
+		lblNewLabel_1_1_3_1_1_3.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1_1_3.setBounds(355, 378, 136, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_3);
+		
+		newPassf = new JTextField();
+		newPassf.setToolTipText("");
+		newPassf.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		newPassf.setColumns(10);
+		newPassf.setBounds(479, 373, 157, 31);
+		settingpanel.add(newPassf);
+		
+		JButton passbtn = new JButton("Change Password");
+		passbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String oldPass = oldPassf.getText();
+				String newPass = newPassf.getText();
+				
+				LoginResult passMatch = Dblogin.loginOperation(userEmail, oldPass, tableName);
+				
+				
+				
+				if(passMatch.isSuccess()) {
+					
+					String newencPass = Encrypt.getEncryptedValue(newPass, 8);
+					
+					boolean res = DataBaseExtension.updatePassword(userEmail, newencPass, tableName);
+					
+					if(res) {
+						
+						JOptionPane.showMessageDialog(null, "password changed");
+						oldPassf.setText("");
+						newPassf.setText("");
+						
+						
+						
+						
+					}else {
+						JOptionPane.showMessageDialog(null, "Failed to change password");
+					}
+					
+					
+				} else {
+					JOptionPane.showMessageDialog(null, "Incorrect password");
+				}
+
+				
+			
+			}
+		});
+		passbtn.setForeground(UIManager.getColor("Button.disabledShadow"));
+		passbtn.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
+		passbtn.setBorder(BorderFactory.createRaisedBevelBorder());
+		passbtn.setBackground(new Color(240, 240, 240));
+		passbtn.setBounds(45, 425, 146, 35);
+		settingpanel.add(passbtn);
+		
+		JLabel lblNewLabel_1_1_3_1_3 = new JLabel("Help & Services");
+		lblNewLabel_1_1_3_1_3.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_3.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 17));
+		lblNewLabel_1_1_3_1_3.setBackground(new Color(0, 75, 75));
+		lblNewLabel_1_1_3_1_3.setBounds(40, 482, 215, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_3);
+		
+		JSeparator separator_1_2_1_2 = new JSeparator();
+		separator_1_2_1_2.setBounds(40, 511, 136, 2);
+		settingpanel.add(separator_1_2_1_2);
+		
+		JLabel lblNewLabel_1_1_3_1_1_3_1 = new JLabel("Report a Problem ?");
+		lblNewLabel_1_1_3_1_1_3_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				try {
+					 Desktop.getDesktop().browse(new URI("https://rajsingh.info.np/"));
+				}
+				catch(Exception e1) {
+					System.out.println(e1);
+				}
+				
+			}
+		});
+		lblNewLabel_1_1_3_1_1_3_1.setForeground(Color.RED);
+		lblNewLabel_1_1_3_1_1_3_1.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		lblNewLabel_1_1_3_1_1_3_1.setBackground(new Color(0, 128, 255));
+		lblNewLabel_1_1_3_1_1_3_1.setBounds(50, 523, 170, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_3_1);
+		
+		JLabel lblNewLabel_1_1_3_1_1_3_1_1 = new JLabel("Support");
+		lblNewLabel_1_1_3_1_1_3_1_1.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1_3_1_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 16));
+		lblNewLabel_1_1_3_1_1_3_1_1.setBackground(new Color(0, 128, 255));
+		lblNewLabel_1_1_3_1_1_3_1_1.setBounds(405, 517, 170, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_3_1_1);
+		
+		JLabel lblNewLabel_1_1_3_1_1_3_1_1_1 = new JLabel("Email: info@heraldcollege.edu.np");
+		lblNewLabel_1_1_3_1_1_3_1_1_1.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1_3_1_1_1.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+		lblNewLabel_1_1_3_1_1_3_1_1_1.setBackground(new Color(0, 128, 255));
+		lblNewLabel_1_1_3_1_1_3_1_1_1.setBounds(405, 547, 231, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_3_1_1_1);
+		
+		JLabel lblNewLabel_1_1_3_1_1_3_1_1_1_1 = new JLabel("Contact: +977 9801000078");
+		lblNewLabel_1_1_3_1_1_3_1_1_1_1.setForeground(new Color(0, 100, 100));
+		lblNewLabel_1_1_3_1_1_3_1_1_1_1.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+		lblNewLabel_1_1_3_1_1_3_1_1_1_1.setBackground(new Color(0, 128, 255));
+		lblNewLabel_1_1_3_1_1_3_1_1_1_1.setBounds(405, 570, 241, 22);
+		settingpanel.add(lblNewLabel_1_1_3_1_1_3_1_1_1_1);
+		
+	
 	}
 }

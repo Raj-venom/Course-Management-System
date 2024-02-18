@@ -300,8 +300,10 @@ public class Signup extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
+
+		
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon("D:\\java IDE\\Registration_System\\src\\CourseManagementSystem\\img\\Herald.png"));
+		lblNewLabel_1.setIcon(new ImageIcon("D:\\java IDE\\Project\\src\\logo\\Herald.png"));
 		lblNewLabel_1.setBounds(10, 65, 537, 179);
 		panel.add(lblNewLabel_1);
 	}

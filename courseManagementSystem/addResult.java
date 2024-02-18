@@ -50,6 +50,7 @@ public class addResult extends JFrame {
 	 * Create the frame.
 	 */
 	public addResult() {
+		setTitle("Submit Result");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 485, 563);
 		contentPane = new JPanel();
@@ -96,7 +97,7 @@ public class addResult extends JFrame {
 		jLabel7.setText("Module");
 		jLabel7.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		jLabel7.setBackground(new Color(102, 102, 102));
-		jLabel7.setBounds(46, 262, 61, 20);
+		jLabel7.setBounds(46, 265, 61, 20);
 		result.add(jLabel7);
 		
 		JButton submitBtn = new JButton();
@@ -114,18 +115,37 @@ public class addResult extends JFrame {
 				boolean resCheckStd = DataBaseExtension.checkStudent(sid, level);
 				
 				
-				if(resCheckStd) {				
-					boolean resModule = DataBaseExtension.addModule(sid, level, module1, module2);
+				if(resCheckStd) {
 					
-				if(resModule) {
-					boolean resMarks = DataBaseExtension.addMarks(sid, level, mark1, mark2);
+					boolean resModule1  = DataBaseExtension.addResult(sid, level, module1, mark1);
+					boolean resModule2  = DataBaseExtension.addResult(sid, level, module2, mark2);
 					
-					if(resMarks) {
+					
+					
+					if(resModule1 && resModule2) {
 						JOptionPane.showMessageDialog(null, "Result Submited!");
 					}else {
-						JOptionPane.showMessageDialog(null, "Failed to update result");
+						JOptionPane.showMessageDialog(null, "Failed");
 					}
-				}
+					
+					
+//					boolean resModule = DataBaseExtension.addModule(sid, level, module1, module2);
+//					
+//				if(resModule) {
+//					boolean resMarks = DataBaseExtension.addMarks(sid, level, mark1, mark2);
+//					
+//					if(resMarks) {
+//						JOptionPane.showMessageDialog(null, "Result Submited!");
+//						// dispose();
+//					}else {
+//						JOptionPane.showMessageDialog(null, "Failed to update result");
+//					}
+//				}
+//				
+				
+				
+			}else {
+				JOptionPane.showMessageDialog(null, "Student Not Found!");
 			}
 			}
 		});
@@ -133,7 +153,7 @@ public class addResult extends JFrame {
 		submitBtn.setForeground(UIManager.getColor("Button.disabledShadow"));
 		submitBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		submitBtn.setBackground(new Color(240, 240, 240));
-		submitBtn.setBounds(145, 441, 187, 40);
+		submitBtn.setBounds(143, 430, 187, 40);
 		result.add(submitBtn);
 		
 
@@ -164,7 +184,7 @@ public class addResult extends JFrame {
 		lblMarks.setText("Marks");
 		lblMarks.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblMarks.setBackground(new Color(102, 102, 102));
-		lblMarks.setBounds(279, 262, 61, 20);
+		lblMarks.setBounds(279, 265, 61, 20);
 		result.add(lblMarks);
 		
 		marks_1 = new JTextField();
