@@ -88,6 +88,9 @@ public class DeleteStudent extends JFrame {
 				if(res) {
 					JOptionPane.showMessageDialog(null, "Student Deleted");
 					Dashboard.getStudent();
+					String message = "Admin: Student id no." + id + " Removed " + DataBaseExtension.currentTime();					
+					DataBaseExtension.addActivities(message);
+					
 					dispose();
 				} else {
 					

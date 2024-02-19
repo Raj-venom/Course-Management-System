@@ -88,6 +88,11 @@ public class DeleteTutor extends JFrame {
 				if(res) {
 					JOptionPane.showMessageDialog(null, "Tutor Deleted");
 					Dashboard.getTutors();
+					
+					String message = "Admin: Tutor id no." + id + " Removed " + DataBaseExtension.currentTime();					
+					DataBaseExtension.addActivities(message);
+										
+					
 					dispose();
 				} else {
 					
