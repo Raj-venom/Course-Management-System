@@ -124,6 +124,7 @@ public class EditTutor extends JFrame {
 				
 				
 				boolean validCourse = DataBaseExtension.checkCourse(faculty);
+				boolean validEmail = DataBaseExtension.checkEmail(email,  "tutor_data");
 				
 				
 				 if(id.equals("") || name.equals("") || email.equals("") || phone.equals("") || faculty.equals("")) {
@@ -136,7 +137,11 @@ public class EditTutor extends JFrame {
 						JOptionPane.showMessageDialog(null, "Course Not Found in College");
 					}
 					
-				
+				 
+					else if(validEmail) {
+						JOptionPane.showMessageDialog(null, "Email already Exist");
+					}
+				 
 				else {			
 					
 					// inserting data to sms.course

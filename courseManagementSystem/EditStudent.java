@@ -127,6 +127,7 @@ public class EditStudent extends JFrame {
 				
 				
 				boolean validCourse = DataBaseExtension.checkCourse(course);
+				boolean validEmail = DataBaseExtension.checkEmail(email,  "students_data");
 				
 				if(!validCourse) {
 					JOptionPane.showMessageDialog(null, "Course Not Found in College");
@@ -136,6 +137,10 @@ public class EditStudent extends JFrame {
 				else if(id.equals("") || name.equals("") || email.equals("") || phone.equals("") || course.equals("")) {
 					
 					JOptionPane.showMessageDialog(null, "All Fields required");
+				}
+				
+				else if(validEmail) {
+					JOptionPane.showMessageDialog(null, "Email already Exist");
 				}
 				
 				else {			

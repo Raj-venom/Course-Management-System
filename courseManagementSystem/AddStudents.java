@@ -27,6 +27,8 @@ public class AddStudents extends JFrame {
 	private JTextField phonef;
 	private JTextField coursef;
 	private JComboBox levelf;
+	
+
 
 	/**
 	 * Launch the application.
@@ -118,9 +120,15 @@ public class AddStudents extends JFrame {
 			
 				boolean validCourse = DataBaseExtension.checkCourse(course);
 				
+				boolean validEmail = DataBaseExtension.checkEmail(email,  "students_data");
+				
 				
 				if(!validCourse) {
 					JOptionPane.showMessageDialog(null, "Course Not Found in College");
+					
+				} 
+				else if(validEmail) {
+					JOptionPane.showMessageDialog(null, "Email already Exist");
 				}
 				
 				else if(name.equals("") || email.equals("") || phone.equals("") || course.equals("")  ) {
@@ -136,6 +144,10 @@ public class AddStudents extends JFrame {
 					if(res) {
 						
 						Dashboard.getStudent();
+						JOptionPane.showMessageDialog(null, "Student Added!");					
+						String message = "Admin: New Student," + email + " Recently Added " + DataBaseExtension.currentTime();					
+						DataBaseExtension.addActivities(message);
+											
 						dispose();
 					}
 					

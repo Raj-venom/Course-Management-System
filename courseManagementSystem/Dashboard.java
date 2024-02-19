@@ -265,7 +265,7 @@ public class Dashboard extends JFrame {
 
 	
 	public Dashboard() {
-		setTitle("Dashboard");
+		setTitle("Admin Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1073, 613);
 		contentPane = new JPanel();
@@ -487,7 +487,7 @@ public class Dashboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				tabbedPane.setSelectedIndex(3);
-				
+							
 				getStudent();
 			}
 		});

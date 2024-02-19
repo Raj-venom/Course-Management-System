@@ -113,6 +113,7 @@ public class AddTutor extends JFrame {
 				String faculty =  facultyf.getText();
 	
 				boolean validCourse = DataBaseExtension.checkCourse(faculty);
+				boolean validEmail = DataBaseExtension.checkEmail(email,  "tutor_data");
 				
 				
 				if(!validCourse) {
@@ -124,12 +125,23 @@ public class AddTutor extends JFrame {
 					JOptionPane.showMessageDialog(null, "All Fields required");
 				}
 				
+				else if(validEmail) {
+					JOptionPane.showMessageDialog(null, "Email already Exist");
+				}
+				
+				
 				else {			
 
 					// inserting data to sms.tutor_data					
 					boolean res = DataBaseExtension.addTutor(name, email, phone, faculty);
 					
 					if(res) {
+						
+						JOptionPane.showMessageDialog(null, "Tutor Added!");					
+						String message = "Admin: New Tutor," + email + " Recently Added " + DataBaseExtension.currentTime();					
+						DataBaseExtension.addActivities(message);
+											
+						
 						
 						Dashboard.getTutors();
 						dispose();

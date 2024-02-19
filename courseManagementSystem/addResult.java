@@ -124,6 +124,8 @@ public class addResult extends JFrame {
 					
 					if(resModule1 && resModule2) {
 						JOptionPane.showMessageDialog(null, "Result Submited!");
+						dispose();
+						
 					}else {
 						JOptionPane.showMessageDialog(null, "Failed");
 					}
