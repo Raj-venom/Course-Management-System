@@ -138,14 +138,44 @@ public class Login extends JFrame {
 					System.out.println("you are logedin as " + checkLogin.getUsername());
 					JOptionPane.showMessageDialog(null, "Welcome Back! "+ checkLogin.getUsername());
 					
-					Dashboard dash = new Dashboard();
 					
-					Dashboard.userEmail = email;
-					Dashboard.tableName = userType;
+					if(userType.equals("Admin")) {
+						//
+						Dashboard dash = new Dashboard();
+						
+						Dashboard.userEmail = email;
+						Dashboard.tableName = userType;
+						
+						dash.setVisible(true);
+						dispose();
+						//
+					}
 					
-					dash.setVisible(true);
-					dispose();
+					else if(userType.equals("Teacher")) {
+						//
+						TeachersDashboard techdash = new TeachersDashboard();
+						
+						TeachersDashboard.userEmail = email;
+						TeachersDashboard.tableName = userType;
+						
+						techdash.setVisible(true);
+						dispose();
+						//
+					}
 					
+					else if(userType.equals("Student")) {
+						//
+						StudentsDashboard techdash = new StudentsDashboard();
+						
+						StudentsDashboard.userEmail = email;
+						StudentsDashboard.tableName = userType;
+						
+						techdash.setVisible(true);
+						dispose();
+						//
+					}
+					
+//					
 					
 				}else {
 					System.out.println("username or password not mathched");
