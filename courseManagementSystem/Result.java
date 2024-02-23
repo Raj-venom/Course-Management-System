@@ -265,8 +265,8 @@ public class Result extends JFrame {
 
 			        	String student[] = nameCourse(id);
 
-			        	course.setText(student[0]);
-			        	name.setText(student[1]);
+			        	course.setText(student[1]);
+			        	name.setText(student[0]);
   	
 			        	getResult(id);
 			      		            

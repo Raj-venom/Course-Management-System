@@ -173,9 +173,7 @@ public class Login extends JFrame {
 						techdash.setVisible(true);
 						dispose();
 						//
-					}
-					
-//					
+					}					
 					
 				}else {
 					System.out.println("username or password not mathched");

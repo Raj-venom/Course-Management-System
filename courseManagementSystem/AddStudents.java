@@ -1,4 +1,4 @@
-package courseManagementSystem;
+ package courseManagementSystem;
 
 import java.awt.EventQueue;
 

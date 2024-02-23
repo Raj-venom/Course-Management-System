@@ -513,7 +513,7 @@ public class Dashboard extends JFrame {
 		left.add(lblNewLabel_1);
 		
 		JPanel notif = new JPanel();
-		notif.setBounds(876, 10, 218, 603);
+		notif.setBounds(876, 20, 218, 603);
 		notif.setBackground(new Color(255, 255, 255));
 		bg.add(notif);
 		notif.setLayout(null);
@@ -1394,6 +1394,26 @@ public class Dashboard extends JFrame {
 		lblNewLabel_1_1_3_1_1_3_1_1_1_1.setBackground(new Color(0, 128, 255));
 		lblNewLabel_1_1_3_1_1_3_1_1_1_1.setBounds(405, 570, 241, 22);
 		settingpanel.add(lblNewLabel_1_1_3_1_1_3_1_1_1_1);
+		
+		JButton stdResult = new JButton("View Students Result");
+		stdResult.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Result obj = new Result();
+				
+				obj.setVisible(true);
+				
+				
+			}
+		});
+		stdResult.setForeground(UIManager.getColor("Button.disabledShadow"));
+		stdResult.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
+		stdResult.setBorder(BorderFactory.createRaisedBevelBorder());
+		stdResult.setBackground(new Color(240, 240, 240));
+		stdResult.setBounds(405, 190, 205, 37);
+		
+		
+		settingpanel.add(stdResult);
 		
 	
 	}
